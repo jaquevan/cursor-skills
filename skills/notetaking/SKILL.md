@@ -1,172 +1,108 @@
 ---
 name: notetaking
 description: >
-  Transforms raw, unstructured notes into clean, beautifully formatted markdown
-  with rich typography, color-coded callouts, code blocks, and formatted links.
-  Use when the user says "take notes", "format my notes", "meeting notes",
-  "standup", "note this down", "document this skill", "summarize this", or pastes
-  unstructured text to organize. Also use when the user asks to push, save, or
-  commit notes to GitHub, or says "reformat this note", "rerun this through
-  the skill", or "fix this note" to reformat an existing file.
+  Transforms raw notes into polished, self-contained HTML files styled with
+  PatternFly 6 components and Red Hat typography. Use when the user says "take
+  notes", "format my notes", "format this", or pastes unstructured text.
+  Also use when the user says "process my inbox" and points to a file.
+  Outputs a styled HTML file to ~/Desktop/Notes Export/.
 license: MIT
 metadata:
   author: ejaquez
-  version: 1.1.0
+  version: 2.0.0
   category: productivity
-  tags: [notetaking, markdown, quarto, red-hat]
+  tags: [notetaking, html, patternfly, red-hat]
 ---
 
 # Notetaking
 
-Two ways to capture a note — **chat paste** (fastest) or **file/inbox** (for
-documents). Both produce the same clean output.
+Takes raw input (pasted text or a file) and outputs a polished, self-contained
+HTML document styled with PatternFly 6 components and Red Hat brand typography.
 
 ---
 
-## Mode 1: Quick Chat Paste (default)
+## Workflow
 
-The user pastes raw text directly into the chat. No file needed.
+### 1. Accept input
 
-1. Read the pasted content
-2. Detect note type (see Step 1 below)
-3. Read `references/style-guide.md`
-4. Format the note and **render it in the chat first** so the user can see it
-5. Ask: *"Save this to your notes repo and push?"*
-6. On confirmation — or if the user said "save it" in the original message — write the file and commit
+Raw notes come from one of two places:
+- **Chat paste** — user pastes text directly into the conversation
+- **File** — user points to a file in `~/Desktop/Notes Inbox/` or attaches one
 
-**This mode is intentionally frictionless.** The user should be able to paste
-raw text mid-conversation and get a formatted note in seconds.
+### 2. Read and process
 
----
+- Assign **tags** based on content (people, tools, projects, teams)
+- Correct grammar and improve structure for readability
+- Apply a consistent, professional voice
+- Identify relationships to other notes via shared tags
 
-## Mode 2: File or Inbox
+### 3. Style as HTML
 
-The user provides a file path, or asks to process a file that was dropped into
-`~/Desktop/Notes Inbox/`. Hand off to the `inbox-processor` skill.
+Generate a **single self-contained HTML file** using:
+- PatternFly 6 CSS (loaded via CDN)
+- Red Hat font family (Display, Text, Mono via Google Fonts)
+- PF components mapped to note elements (see `references/component-map.md`)
 
----
+The HTML must be self-contained — all styles loaded via CDN links in `<head>`,
+no local file dependencies. It should look polished when opened in any browser.
 
-## Step 1: Detect note type
+### 4. Export
 
-| Signals | Type |
-|---|---|
-| Attendees, agenda, decisions, action items | **meeting** |
-| "yesterday / today / blockers" | **standup** |
-| Studying a concept, tool, API, or skill | **learning** |
-| Documenting a Cursor skill | **skill-doc** |
-| Code snippet with no other context | **snippet** |
-| Anything else | **freeform** |
-
-For **snippet** type: extract the code, add a one-line description and language
-tag, and append to `~/Projects/notes/snippets/README.md`. No full template needed.
-
----
-
-## Step 2: Read the style guide
-
-Before generating output, read `references/style-guide.md`.
-
----
-
-## Step 3: Select and fill the template
-
-| Type | Template |
-|---|---|
-| meeting | `templates/meeting.md` |
-| learning / skill-doc | `templates/learning.md` |
-| standup | `templates/standup.md` |
-| freeform / snippet | Style guide only, no template |
-
-Fill every section. Infer missing metadata (date, title slug) from context
-or today's date. Remove sections that are genuinely not applicable — never
-leave placeholders.
-
----
-
-## Step 4: Output path
+Save the HTML file to:
 
 ```
-~/Projects/notes/<section>/<YYYY-MM-DD-slug>.md
+~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html
 ```
 
-| Type | Folder |
-|---|---|
-| meeting | `meetings/` |
-| learning / skill-doc | `learning/` |
-| standup | `standups/` |
-| freeform | `notes/` |
-| project-specific | `projects/<project-name>/` |
-
-If the note is clearly scoped to a specific project (e.g. "notes from the
-cursor-skills work today"), save it under `projects/<project-name>/` instead.
+Tell the user the file path and that they can open it in any browser.
 
 ---
 
-## Step 5: Commit and push
+## HTML structure
 
-**Prerequisite check:** Before committing, verify git is configured:
+Every note follows this structure:
 
-```bash
-git config user.email
-git config user.name
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{note title}</title>
+  <link rel="stylesheet" href="https://unpkg.com/@patternfly/patternfly@6/patternfly.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;700;900&family=Red+Hat+Text:wght@400;600&family=Red+Hat+Mono:wght@400;700&display=swap">
+  <style>
+    /* Inline overrides — see references/component-map.md */
+  </style>
+</head>
+<body class="pf-v6-c-page">
+  <main class="pf-v6-c-page__main">
+    <section class="pf-v6-c-page__main-section">
+      <!-- Note content using PF components -->
+    </section>
+  </main>
+</body>
+</html>
 ```
 
-If either returns nothing, stop and tell the user:
-> Git is not configured. Run the setup steps in `SETUP.md` before notes can be pushed.
+---
 
-Once confirmed, commit and push:
+## Tag system
 
-```bash
-cd ~/Projects/notes
-git add <file>
-git commit -m "note: <title> (<type>)"
-git push
-```
+Assign tags using PF Label components. Color-code by category:
 
-Conventional commit types for notes: `note:` for new notes, `chore:` for
-index/tag updates, `fix:` for corrections to existing notes.
+| Category | PF Label color | Example tags |
+|---|---|---|
+| Red Hat / brand | `red` | `rhat`, `patternfly`, `openshift` |
+| People | `blue` | `zack`, `priya`, `steven-huels` |
+| Tools / tech | `teal` | `jira`, `quarto`, `mcp`, `cursor` |
+| Projects | `purple` | `adlc`, `aisdlc`, `vlm` |
+| Status | `green` / `orange` | `decision`, `blocker`, `action-item` |
 
-Confirm success and show the relative file path.
+Tags render as a PF LabelGroup at the top of the note, below the title.
 
 ---
 
-## Reformat mode
+## Additional resources
 
-Triggered when the user says "reformat this note", "rerun this through the
-skill", "fix this note", or points to an existing file in `~/Projects/notes/`.
-
-1. Read the existing note file
-2. Detect its type from the `categories:` frontmatter field
-3. Re-apply the full workflow (Steps 1–4) using the existing content as the
-   raw input — preserve all facts, dates, attendees, and decisions; only
-   update structure, callout syntax, and formatting
-4. Overwrite the file in place
-5. Commit with message `fix: reformat <filename>`
-
-**Do not change the date or slug in the filename.** If the frontmatter already
-has correct metadata, keep it. Only fix formatting issues — wrong callout
-syntax, missing sections, poor structure, style guide violations.
-
----
-
-## Cross-Skill Documentation Pattern
-
-When the user says "document how [skill-name] works" or "note this skill":
-
-1. Read `~/.cursor/skills/<skill-name>/SKILL.md`
-2. Use `templates/learning.md` with these sections:
-   - **What it does** — from the description frontmatter
-   - **Trigger phrases** — exact phrases that activate it
-   - **Workflow steps** — numbered list from the SKILL.md body
-   - **Example input → output** — one concrete pair
-   - **Composes with** — other skills it works alongside
-3. Save to `~/Projects/notes/learning/skill-<skill-name>-<date>.md`
-
----
-
-## Additional Resources
-
-- Typography and callout syntax → [references/style-guide.md](references/style-guide.md)
-- Meeting template → [templates/meeting.md](templates/meeting.md)
-- Learning template → [templates/learning.md](templates/learning.md)
-- Standup template → [templates/standup.md](templates/standup.md)
+- Component-to-note mapping → [references/component-map.md](references/component-map.md)

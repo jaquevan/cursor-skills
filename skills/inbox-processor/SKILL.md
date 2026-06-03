@@ -3,129 +3,66 @@ name: inbox-processor
 description: >
   Processes files dropped into ~/Desktop/Notes Inbox/ — including raw text,
   markdown, PDFs, and images (whiteboard photos, handwritten notes, screenshots).
-  Converts each file into a clean, formatted note and saves it to
-  ~/Projects/notes/. Use when the user says "process my inbox",
-  "format the files in my inbox", "process this file", or points to a file
-  in the Notes Inbox folder.
+  Extracts content and hands off to the notetaking skill for formatting.
+  Use when the user says "process my inbox", "format the files in my inbox",
+  or "process this file".
 license: MIT
 metadata:
   author: ejaquez
-  version: 1.0.0
+  version: 2.0.0
   category: productivity
-  tags: [notetaking, inbox, pdf, images, ocr]
+  tags: [notetaking, inbox, pdf, images]
 ---
 
 # Inbox Processor
 
-Reads files from `~/Desktop/Notes Inbox/`, extracts content from any format,
-and hands each one to the notetaking skill for formatting and saving.
+Reads files from `~/Desktop/Notes Inbox/`, extracts their content, and passes
+each one through the notetaking skill for HTML formatting and export.
 
 ---
 
-## Supported Input Types
+## Supported input types
 
 | Extension | How content is extracted |
 |---|---|
 | `.txt`, `.md` | Read as-is |
-| `.pdf` | Read using Claude's built-in PDF understanding |
-| `.png`, `.jpg`, `.jpeg`, `.webp` | Read using Claude's vision capability |
+| `.pdf` | Claude reads PDF content natively |
+| `.png`, `.jpg`, `.jpeg`, `.webp` | Claude reads via vision |
 
 ---
 
 ## Workflow
 
-### Step 1: List the inbox
+### 1. List the inbox
 
 ```bash
 ls ~/Desktop/Notes\ Inbox/
 ```
 
-Skip `README.md`. If the inbox is empty, tell the user and stop.
+Skip `README.md`. If empty, tell the user and stop.
 
-### Step 2: Process each file
+### 2. Process each file
 
 For each file:
+1. Extract content (read text, parse PDF, or read image with vision)
+2. Pass the extracted content to the `notetaking` skill workflow:
+   - Assign tags, correct grammar, improve structure
+   - Generate styled HTML with PatternFly components
+   - Save to `~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html`
 
-1. **Extract content**
-   - Text/markdown: read directly
-   - PDF: read the file — Claude can parse PDF content natively
-   - Image: read the image — Claude can extract text and structure from
-     whiteboard photos, handwritten notes, and screenshots
+### 3. Archive originals
 
-2. **Identify note type**
-   Use the same detection rules as the `notetaking` skill:
-   - Attendees / action items → meeting
-   - Yesterday / today / blockers → standup
-   - Concept / tool / API → learning
-   - Code only → snippet
-   - Anything else → freeform
-
-3. **Format the note**
-   Apply the notetaking skill's full workflow:
-   - Read `~/.cursor/skills/notetaking/references/style-guide.md`
-   - Select the matching template from `~/.cursor/skills/notetaking/templates/`
-   - Fill it with the extracted content
-   - Use the source filename's date prefix if present (e.g. `2026-06-03-meeting.pdf`)
-     otherwise use today's date
-
-4. **Save the formatted note**
-   Write to `~/Projects/notes/<section>/<YYYY-MM-DD-slug>.md`
-
-5. **Archive the original**
-   Move the original file to `~/Projects/notes/attachments/`:
-   ```bash
-   mv ~/Desktop/Notes\ Inbox/<filename> ~/Projects/notes/attachments/<filename>
-   ```
-
-### Step 3: Commit everything
-
-After all files are processed:
+Move processed files out of the inbox:
 
 ```bash
-cd ~/Projects/notes
-git add .
-git commit -m "note: process inbox (<N> files)"
-git push
+mv ~/Desktop/Notes\ Inbox/<filename> ~/Desktop/Notes\ Inbox/processed/
 ```
 
-Git must be configured before this works. See `SETUP.md` in the cursor-skills
-repo if `git config user.email` returns nothing.
+Create the `processed/` subfolder if it doesn't exist.
 
-### Step 4: Report
+### 4. Report
 
 Tell the user:
 - How many files were processed
-- Where each note was saved (relative path)
+- Where each HTML file was exported
 - Any files that couldn't be processed and why
-
----
-
-## Single-File Mode
-
-If the user points to a specific file ("process this PDF" or drags a file into
-the chat), process just that one file using the same workflow above. No need
-to scan the full inbox.
-
----
-
-## Tips for Best Results
-
-**Whiteboard photos:** Make sure the image is in focus and well-lit. Claude
-reads the text and structure directly — no OCR library needed.
-
-**Handwritten notes:** Works best when writing is clear. Claude will do its
-best to interpret ambiguous words from context.
-
-**PDFs:** Multi-page PDFs are read in full. If the PDF is very long (50+
-pages), Claude will summarize rather than transcribe verbatim.
-
-**Raw text dumps:** No special formatting needed. The messier the better —
-that's what this skill is for.
-
----
-
-## Composing with Other Skills
-
-After processing the inbox, chain into:
-- `tag-scanner` — to link new notes to related existing notes
-- `internship-progress` — to update the progress log with anything new
