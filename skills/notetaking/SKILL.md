@@ -11,70 +11,103 @@ description: >
 
 # Notetaking
 
-Converts raw input into structured, visually rich markdown following the project
-design system. Works with meeting notes, learning notes, standups, freeform
-captures, and skill documentation.
+Two ways to capture a note — **chat paste** (fastest) or **file/inbox** (for
+documents). Both produce the same clean output.
 
-## Workflow
+---
 
-### Step 1: Detect note type
+## Mode 1: Quick Chat Paste (default)
 
-Choose from:
-- **meeting** — has attendees, agenda, or action items
-- **learning** — studying a concept, tool, skill, or API
-- **standup** — daily update (yesterday / today / blockers)
-- **skill-doc** — documenting how a Cursor skill works
-- **freeform** — anything that doesn't fit above
+The user pastes raw text directly into the chat. No file needed.
 
-### Step 2: Read the style guide
+1. Read the pasted content
+2. Detect note type (see Step 1 below)
+3. Read `references/style-guide.md`
+4. Format the note and **render it in the chat first** so the user can see it
+5. Ask: *"Save this to your notes repo and push?"*
+6. On confirmation — or if the user said "save it" in the original message — write the file and commit
 
-Before generating output, read `references/style-guide.md` for the full
-typography rules, callout syntax, and link formatting conventions.
+**This mode is intentionally frictionless.** The user should be able to paste
+raw text mid-conversation and get a formatted note in seconds.
 
-### Step 3: Select and fill the template
+---
 
-Load the matching template from `templates/`:
+## Mode 2: File or Inbox
+
+The user provides a file path, or asks to process a file that was dropped into
+`~/Desktop/Notes Inbox/`. Hand off to the `inbox-processor` skill.
+
+---
+
+## Step 1: Detect note type
+
+| Signals | Type |
+|---|---|
+| Attendees, agenda, decisions, action items | **meeting** |
+| "yesterday / today / blockers" | **standup** |
+| Studying a concept, tool, API, or skill | **learning** |
+| Documenting a Cursor skill | **skill-doc** |
+| Code snippet with no other context | **snippet** |
+| Anything else | **freeform** |
+
+For **snippet** type: extract the code, add a one-line description and language
+tag, and append to `~/Projects/notes/snippets/README.md`. No full template needed.
+
+---
+
+## Step 2: Read the style guide
+
+Before generating output, read `references/style-guide.md`.
+
+---
+
+## Step 3: Select and fill the template
 
 | Type | Template |
 |---|---|
 | meeting | `templates/meeting.md` |
-| learning | `templates/learning.md` |
+| learning / skill-doc | `templates/learning.md` |
 | standup | `templates/standup.md` |
-| skill-doc | `templates/learning.md` (with skill-specific sections) |
-| freeform | No template — apply style guide directly |
+| freeform / snippet | Style guide only, no template |
 
-Fill every section from the user's raw notes. Infer missing metadata (date,
-title slug) from context or today's date. Never leave template placeholders
-unfilled; remove sections that are genuinely not applicable.
+Fill every section. Infer missing metadata (date, title slug) from context
+or today's date. Remove sections that are genuinely not applicable — never
+leave placeholders.
 
-### Step 4: Determine output path
+---
 
-Save the formatted note to the user's notes repo:
+## Step 4: Output path
 
 ```
 ~/Projects/notes/<section>/<YYYY-MM-DD-slug>.md
 ```
 
-Section mapping:
-- meeting → `meetings/`
-- learning / skill-doc → `learning/`
-- standup → `standups/`
-- freeform → `notes/`
+| Type | Folder |
+|---|---|
+| meeting | `meetings/` |
+| learning / skill-doc | `learning/` |
+| standup | `standups/` |
+| freeform | `notes/` |
+| project-specific | `projects/<project-name>/` |
 
-Create the directory if it doesn't exist.
+If the note is clearly scoped to a specific project (e.g. "notes from the
+cursor-skills work today"), save it under `projects/<project-name>/` instead.
 
-### Step 5: Commit and push
+---
 
-After writing the file:
+## Step 5: Commit and push
 
 ```bash
 cd ~/Projects/notes
 git add <file>
-git commit -m "note: <title> (<type>)"
+git -c user.email="ejaquez@users.noreply.github.com" \
+    -c user.name="ejaquez" \
+    -c commit.gpgsign=false \
+    commit --no-gpg-sign -m "note: <title> (<type>)"
 git push
 ```
 
-Confirm success and show the relative file path to the user.
+Confirm success and show the relative file path.
 
 ---
 
@@ -83,21 +116,19 @@ Confirm success and show the relative file path to the user.
 When the user says "document how [skill-name] works" or "note this skill":
 
 1. Read `~/.cursor/skills/<skill-name>/SKILL.md`
-2. Use the `learning.md` template with these skill-specific sections:
-   - **What it does** — from the description frontmatter field
+2. Use `templates/learning.md` with these sections:
+   - **What it does** — from the description frontmatter
    - **Trigger phrases** — exact phrases that activate it
-   - **Workflow steps** — numbered list from SKILL.md body
+   - **Workflow steps** — numbered list from the SKILL.md body
    - **Example input → output** — one concrete pair
    - **Composes with** — other skills it works alongside
 3. Save to `~/Projects/notes/learning/skill-<skill-name>-<date>.md`
-
-This builds a personal wiki of your skill library over time.
 
 ---
 
 ## Additional Resources
 
-- Typography rules and callout syntax → [references/style-guide.md](references/style-guide.md)
-- Meeting note structure → [templates/meeting.md](templates/meeting.md)
-- Learning note structure → [templates/learning.md](templates/learning.md)
-- Standup structure → [templates/standup.md](templates/standup.md)
+- Typography and callout syntax → [references/style-guide.md](references/style-guide.md)
+- Meeting template → [templates/meeting.md](templates/meeting.md)
+- Learning template → [templates/learning.md](templates/learning.md)
+- Standup template → [templates/standup.md](templates/standup.md)
