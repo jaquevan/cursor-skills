@@ -54,7 +54,48 @@ Save the HTML file to:
 ~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html
 ```
 
+If the input was a file (PDF, image, text), move the original to:
+
+```
+~/Desktop/Notes Export/originals/<original-filename>
+```
+
+Include a "View original" link at the bottom of the HTML output pointing to
+`./originals/<filename>`.
+
 Tell the user the file path and that they can open it in any browser.
+
+---
+
+## Refinement
+
+When the user says "fix the summary", "add more detail to X", "change the
+tags", or any edit request about an existing note:
+
+1. Read the existing HTML file from `~/Desktop/Notes Export/`
+2. Apply the requested edit — only change what was asked
+3. Overwrite the file in place
+4. Confirm what was changed
+
+**Do not regenerate the entire note for small edits.** Only regenerate fully
+if the user says "reprocess this" or "start over".
+
+### How summaries are built
+
+The summary (info Alert at the top) should:
+- Be 1–2 sentences max
+- Capture the *outcome*, not the process
+- Include the most important number or decision if one exists
+- Use active voice, no filler
+
+If the user says "fix the summary" — rewrite it following these rules.
+
+### How structure is determined
+
+The skill decides section structure based on content density:
+- **Short notes (< 500 words):** No tabs, flat sections with dividers
+- **Medium notes (500–1500 words):** Accordion for subsections
+- **Long notes (1500+ words):** Tabs for major sections, accordion within tabs
 
 ---
 
