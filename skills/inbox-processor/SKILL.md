@@ -7,6 +7,12 @@ description: >
   ~/Projects/notes/. Use when the user says "process my inbox",
   "format the files in my inbox", "process this file", or points to a file
   in the Notes Inbox folder.
+license: MIT
+metadata:
+  author: ejaquez
+  version: 1.0.0
+  category: productivity
+  tags: [notetaking, inbox, pdf, images, ocr]
 ---
 
 # Inbox Processor

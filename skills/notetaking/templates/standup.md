@@ -1,12 +1,12 @@
 ---
 title: "Standup {{YYYY-MM-DD}}"
 date: {{YYYY-MM-DD}}
-author: "{{AUTHOR}}"
+author: "ejaquez"
 categories: [standup]
 tags: [standup, {{week-tag}}]
 ---
 
-**TL;DR:** {{One sentence: what you're focused on today and the key blocker if any.}}
+**TL;DR:** {{one sentence — what you're focused on today and any key blocker.}}
 
 ---
 
@@ -26,12 +26,12 @@ tags: [standup, {{week-tag}}]
 
 ## Blockers
 
-::: {.callout-warning title="Blocked"}
-{{Describe the blocker clearly: what is it, what have you tried, who can unblock you. Remove this block if there are no blockers.}}
-:::
+> [!WARNING]
+> {{Describe the blocker: what is it, what have you tried, who can unblock you.
+> Remove this block if there are no blockers.}}
 
 ---
 
 ## Notes
 
-{{Any context, observations, or side notes that don't fit above. Remove section if empty.}}
+{{Any context, observations, or side notes that don't fit above. Remove if empty.}}

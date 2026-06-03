@@ -1,55 +1,53 @@
 ---
-title: "{{TITLE}}"
+title: "{{title in sentence case}}"
 date: {{YYYY-MM-DD}}
-author: "{{AUTHOR}}"
+author: "ejaquez"
 categories: [learning]
-tags: [{{TAGS}}]
+tags: [{{tags}}]
 ---
 
-**TL;DR:** {{ONE_SENTENCE_SUMMARY}}
+**TL;DR:** {{one sentence summary}}
 
 ## Contents
 
 - [Source](#source)
-- [Key Concepts](#key-concepts)
-- [Code Examples](#code-examples)
-- [Open Questions](#open-questions)
-- [Related Skills](#related-skills)
+- [Key concepts](#key-concepts)
+- [Code examples](#code-examples)
+- [Open questions](#open-questions)
+- [Related skills](#related-skills)
 - [Links](#links)
 
 ---
 
 ## Source
 
-| Field   | Value                                          |
-|---------|------------------------------------------------|
-| Topic   | {{topic or technology being studied}}          |
-| Source  | {{book, doc, person, course, codebase, skill}} |
-| Context | {{internship task, personal project, onboarding, etc.}} |
+| Field    | Value                                                           |
+|----------|-----------------------------------------------------------------|
+| Topic    | {{topic or technology being studied}}                           |
+| Source   | {{book, doc, person, course, codebase, skill}}                  |
+| Context  | {{internship task, personal project, onboarding, etc.}}         |
 
 ---
 
-## Key Concepts
+## Key concepts
 
-::: {.callout-tip title="Core Idea"}
-{{The single most important thing to understand from this session.}}
-:::
+> [!TIP]
+> {{The single most important thing to understand from this session.}}
 
 ### {{Concept 1}}
 
-{{Clear explanation in your own words. Aim for 2-4 sentences.}}
+{{Clear explanation in your own words. Aim for 2–4 sentences.}}
 
 ### {{Concept 2}}
 
 {{Clear explanation.}}
 
-::: {.callout-warning title="Watch Out"}
-{{Common misconception or gotcha related to what you just learned. Remove if none.}}
-:::
+> [!WARNING]
+> {{Common misconception or gotcha related to what you just learned. Remove if none.}}
 
 ---
 
-## Code Examples
+## Code examples
 
 {{Brief description of what the following code demonstrates:}}
 
@@ -57,15 +55,9 @@ tags: [{{TAGS}}]
 {{code snippet}}
 ```
 
-{{Another description if there are multiple examples:}}
-
-```{{language}}
-{{code snippet}}
-```
-
 ---
 
-## Open Questions
+## Open questions
 
 Things that came up that still need answers:
 
@@ -74,9 +66,9 @@ Things that came up that still need answers:
 
 ---
 
-## Related Skills
+## Related skills
 
-{{List any Cursor skills that are relevant to this topic. Link to the skill documentation note if it exists.}}
+{{List any Cursor skills relevant to this topic.}}
 
 - `{{skill-name}}` — {{how it connects to this topic}}
 
@@ -84,18 +76,18 @@ Things that came up that still need answers:
 
 ## Links
 
-- [{{Descriptive Label}}]({{URL}}) — {{one-line context}}
+- [{{Descriptive label}}]({{URL}}) — {{one-line context}}
 
 ---
 
-<!-- SKILL DOCUMENTATION VARIANT
-When this template is used to document a Cursor skill, replace the sections above
-with the following structure after the title block and TL;DR:
+<!--
+SKILL DOCUMENTATION VARIANT
+When documenting a Cursor skill, replace sections above with:
 
-## What It Does
+## What it does
 (from the skill's description frontmatter field)
 
-## When to Trigger
+## When to trigger
 - Trigger phrase 1
 - Trigger phrase 2
 
@@ -103,13 +95,9 @@ with the following structure after the title block and TL;DR:
 (numbered steps from the SKILL.md body)
 
 ## Example
-**Input:**
-(paste raw example input)
+**Input:** (paste raw example input)
+**Output:** (paste or describe the generated output)
 
-**Output:**
-(paste or describe the generated output)
-
-## Composes With
+## Composes with
 - `skill-name` — how these two skills work together
-
 -->

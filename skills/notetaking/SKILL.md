@@ -7,6 +7,12 @@ description: >
   "standup", "note this down", "document this skill", "summarize this", or pastes
   unstructured text to organize. Also use when the user asks to push, save, or
   commit notes to GitHub.
+license: MIT
+metadata:
+  author: ejaquez
+  version: 1.1.0
+  category: productivity
+  tags: [notetaking, markdown, quarto, red-hat]
 ---
 
 # Notetaking

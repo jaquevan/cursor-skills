@@ -6,6 +6,12 @@ description: >
   notes. Use when the user says "scan my notes", "find related notes", "update
   tags", "build my index", "what notes are related to [topic]", or "link my notes
   together". Also triggers after the notetaking skill saves a new note.
+license: MIT
+metadata:
+  author: ejaquez
+  version: 1.0.0
+  category: productivity
+  tags: [notetaking, tags, index, knowledge-management]
 ---
 
 # Tag Scanner

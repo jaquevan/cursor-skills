@@ -5,25 +5,109 @@ This file is loaded by the notetaking skill at generation time.
 
 ---
 
+## Red Hat Design Language
+
+Notes use the Red Hat open-source design system. Apply these wherever the
+rendering environment supports them.
+
+### Fonts
+
+| Role | Font | Use |
+|------|------|-----|
+| Headings | **Red Hat Display** | H1–H3, titles, pull quotes |
+| Body | **Red Hat Text** | Paragraphs, lists, table cells |
+| Code | **Red Hat Mono** | All code blocks, inline code, file paths |
+
+All three are open source (SIL license) and available at:
+[github.com/RedHatOfficial/RedHatFont](https://github.com/RedHatOfficial/RedHatFont)
+
+For Quarto documents, add to `_quarto.yml`:
+```yaml
+format:
+  html:
+    mainfont: "Red Hat Text"
+    monofont: "Red Hat Mono"
+```
+
+### Colors (PatternFly semantic mapping)
+
+These color names map to PatternFly 6 design tokens and Red Hat brand palette:
+
+| Semantic role | Color name | Hex | Use in notes |
+|---|---|---|---|
+| Primary / brand | Red Hat Red | `#ee0000` | Headlines, emphasis |
+| Info / context | Blue 40 | `#1fa7f8` | Background/context callouts |
+| Success / insight | Green 50 | `#3e8635` | Tips and key insights |
+| Warning / caution | Orange 40 | `#f0ab00` | Gotchas, watch-out notes |
+| Danger / decision | Red 60 | `#c9190b` | Decisions, critical info |
+| Neutral | Black / Gray 80 | `#151515` | Body text |
+
+In markdown notes these colors are expressed through GitHub Alert types (below),
+not inline CSS.
+
+---
+
 ## Title Block
 
-Every note starts with a Quarto YAML front matter block:
+Every note starts with Quarto YAML front matter:
 
 ```yaml
 ---
-title: "Descriptive Title in Title Case"
+title: "Descriptive Title in Sentence Case"
 date: YYYY-MM-DD
-author: "<your name>"
+author: "ejaquez"
 categories: [meeting | learning | standup | freeform]
 tags: [relevant, keywords]
 ---
 ```
 
-Follow with a one-line **TL;DR** in bold immediately under the title block:
+Follow with a one-line **TL;DR** in bold immediately after:
 
 ```markdown
 **TL;DR:** One sentence that captures the entire note's value.
 ```
+
+---
+
+## Callout Alerts (GitHub Alerts — default for all notes)
+
+Use GitHub Alerts. These render on GitHub.com, in VS Code markdown preview,
+and degrade to a readable blockquote everywhere else.
+
+**Do NOT use Quarto `:::` callout syntax in notes.** Reserve Quarto callouts
+only for `.qmd` files being explicitly built with `quarto render`.
+
+### Note — background context, definitions (blue)
+```markdown
+> [!NOTE]
+> Useful background that isn't the main point but helps understanding.
+```
+
+### Tip — key insight, recommendation (green)
+```markdown
+> [!TIP]
+> The main takeaway or a recommendation worth highlighting.
+```
+
+### Important — decision, must-know (red)
+```markdown
+> [!IMPORTANT]
+> A firm decision made or a constraint that must be respected.
+```
+
+### Warning — gotcha, caveat, watch out (amber)
+```markdown
+> [!WARNING]
+> Something that can go wrong or is easy to misunderstand.
+```
+
+### Caution — deprecated, risky, unstable (orange-red)
+```markdown
+> [!CAUTION]
+> Use sparingly — for things being phased out or carrying real risk.
+```
+
+**Rule:** No more than 3 alert blocks per note. Use prose for everything else.
 
 ---
 
@@ -32,54 +116,12 @@ Follow with a one-line **TL;DR** in bold immediately under the title block:
 - `##` for major sections (Context, Discussion, Decisions, Action Items)
 - `###` for subsections
 - Never skip heading levels
+- Sentence case for all headings — not Title Case (Red Hat typography standard)
 - Keep headings short — 4 words or fewer when possible
 
 ---
 
-## Callout Blocks (Quarto)
-
-Use these for color-coded semantic emphasis. Pick the right type for the content.
-
-### Tip — Key insight, recommendation (green)
-```markdown
-::: {.callout-tip title="Key Insight"}
-The main takeaway or a recommendation worth highlighting.
-:::
-```
-
-### Note — Background context, definitions (blue)
-```markdown
-::: {.callout-note title="Context"}
-Useful background that isn't the main point but helps understanding.
-:::
-```
-
-### Warning — Gotcha, caveat, watch out (amber)
-```markdown
-::: {.callout-warning title="Watch Out"}
-Something that can go wrong or is easy to misunderstand.
-:::
-```
-
-### Important — Decision, must-know (orange/red)
-```markdown
-::: {.callout-important title="Decision"}
-A firm decision made or a constraint that must be respected.
-:::
-```
-
-### Caution — Deprecated, risky, unstable (yellow)
-```markdown
-::: {.callout-caution title="Deprecated"}
-Use sparingly — for things being phased out or carrying real risk.
-:::
-```
-
-**Rule:** No more than 3 callout blocks per note. Use prose for everything else.
-
----
-
-## Code Snippets
+## Code snippets
 
 Always use fenced code blocks with a language tag. Never use inline code for
 multi-line content.
@@ -91,21 +133,12 @@ def example():
 ```
 ```
 
-Supported language tags: `python`, `javascript`, `typescript`, `bash`, `sql`,
+Supported tags: `python`, `javascript`, `typescript`, `bash`, `sql`,
 `json`, `yaml`, `markdown`, `html`, `css`, `go`, `rust`, `java`
 
-For shell commands, use `bash`. For file contents of unknown type, use `text`.
+For shell commands: `bash`. For unknown file types: `text`.
 
-Add a single line of plain prose before each code block explaining what it does:
-
-```markdown
-This function fetches paginated results from the API:
-
-```python
-def fetch_all(endpoint):
-    ...
-```
-```
+Add one line of prose before each code block explaining what it does.
 
 ---
 
@@ -119,7 +152,7 @@ Format every link with a descriptive label and a brief context note on the same 
 
 Never use bare URLs. Never use generic labels like "here" or "link".
 
-For a list of references at the bottom of a note, use a `## Links` section:
+For a reference section at the bottom of a note:
 
 ```markdown
 ## Links
@@ -130,12 +163,12 @@ For a list of references at the bottom of a note, use a `## Links` section:
 
 ---
 
-## Action Items
+## Action items
 
-Use a task list with owners and (optionally) due dates:
+Use a task list with owners and optional due dates:
 
 ```markdown
-## Action Items
+## Action items
 
 - [ ] @owner — description of task (due: YYYY-MM-DD)
 - [ ] @owner — description of task
@@ -148,7 +181,7 @@ If there is no owner, use `@me`.
 ## Tables
 
 Use tables for structured comparisons, option lists, or mappings. Always include
-a header row. Align columns with spaces for readability in source:
+a header row:
 
 ```markdown
 | Column A     | Column B       | Notes              |
@@ -158,7 +191,7 @@ a header row. Align columns with spaces for readability in source:
 
 ---
 
-## Table of Contents
+## Table of contents
 
 For notes over ~300 words, add a TOC after the TL;DR:
 
@@ -168,7 +201,7 @@ For notes over ~300 words, add a TOC after the TL;DR:
 - [Context](#context)
 - [Discussion](#discussion)
 - [Decisions](#decisions)
-- [Action Items](#action-items)
+- [Action items](#action-items)
 - [Links](#links)
 ```
 
@@ -180,20 +213,22 @@ Use `---` to separate major sections. Do not use `***` or `___`.
 
 ---
 
-## Tone and Voice
+## Tone and voice (Red Hat brand guidelines)
 
-- Write in clear, direct prose — no filler phrases ("it is important to note that")
-- Use active voice
+- Sentence case everywhere — not title case, not all caps
+- Active voice, direct prose — no filler phrases
+- Bold for emphasis — not italics, not underline
 - Bullet lists for parallel items; prose for narrative
-- Abbreviations are fine if introduced once: "pull request (PR)"
-- Keep sentences under 25 words when possible
+- Sentences under 25 words when possible
+- Abbreviations introduced once: "pull request (PR)"
 
 ---
 
-## What to Avoid
+## What to avoid
 
+- Quarto `:::` callout blocks in standard notes (use GitHub Alerts instead)
 - Leaving template placeholders unfilled (remove the section instead)
 - Nesting bullet lists more than 2 levels deep
-- Using callouts for non-semantic decoration
-- Adding more than one H1 heading (the title block is the H1)
-- Emoji in headings or body text (only acceptable in action item owners if already used in the raw notes)
+- More than one H1 heading
+- Title case headings
+- Emoji in headings or body text

@@ -6,6 +6,12 @@ description: >
   internship progress log. Use when the user says "update my progress log",
   "what have I done this week", "internship summary", "generate my progress
   report", "what skills have I built", or "what action items are still open".
+license: MIT
+metadata:
+  author: ejaquez
+  version: 1.0.0
+  category: productivity
+  tags: [internship, progress, tracking, aggregation]
 ---
 
 # Internship Progress

@@ -1,35 +1,34 @@
 ---
-title: "{{TITLE}}"
+title: "{{title in sentence case}}"
 date: {{YYYY-MM-DD}}
-author: "{{AUTHOR}}"
+author: "ejaquez"
 categories: [meeting]
-tags: [{{TAGS}}]
+tags: [{{tags}}]
 ---
 
-**TL;DR:** {{ONE_SENTENCE_SUMMARY}}
+**TL;DR:** {{one sentence summary}}
 
 ## Contents
 
 - [Context](#context)
 - [Discussion](#discussion)
 - [Decisions](#decisions)
-- [Action Items](#action-items)
+- [Action items](#action-items)
 - [Links](#links)
 
 ---
 
 ## Context
 
-| Field       | Value                    |
-|-------------|--------------------------|
-| Date        | {{YYYY-MM-DD HH:MM}}     |
-| Attendees   | {{NAME, NAME, NAME}}     |
-| Meeting type | {{sync \| planning \| review \| 1:1 \| kickoff}} |
-| Related to  | {{project or topic}}     |
+| Field         | Value                                                     |
+|---------------|-----------------------------------------------------------|
+| Date          | {{YYYY-MM-DD HH:MM}}                                      |
+| Attendees     | {{Name, Name, Name}}                                      |
+| Meeting type  | {{sync \| planning \| review \| 1:1 \| kickoff}}          |
+| Related to    | {{project or topic}}                                      |
 
-::: {.callout-note title="Background"}
-{{Why this meeting was called and what it was trying to resolve or decide.}}
-:::
+> [!NOTE]
+> {{Why this meeting was called and what it was trying to resolve or decide.}}
 
 ---
 
@@ -50,13 +49,12 @@ Keep to prose — bullet lists only for parallel enumerable items.}}
 
 ## Decisions
 
-::: {.callout-important title="Decision"}
-{{State the decision clearly. One decision per callout. Remove this block if no formal decisions were made.}}
-:::
+> [!IMPORTANT]
+> {{State the decision clearly. One decision per block. Remove if no formal decisions were made.}}
 
 ---
 
-## Action Items
+## Action items
 
 - [ ] @{{owner}} — {{task description}} (due: {{YYYY-MM-DD}})
 - [ ] @{{owner}} — {{task description}}
@@ -65,4 +63,4 @@ Keep to prose — bullet lists only for parallel enumerable items.}}
 
 ## Links
 
-- [{{Descriptive Label}}]({{URL}}) — {{one-line context}}
+- [{{Descriptive label}}]({{URL}}) — {{one-line context}}
