@@ -84,12 +84,12 @@ After all files are processed:
 ```bash
 cd ~/Projects/notes
 git add .
-git -c user.email="ejaquez@users.noreply.github.com" \
-    -c user.name="ejaquez" \
-    -c commit.gpgsign=false \
-    commit --no-gpg-sign -m "note: process inbox (<N> files)"
+git commit -m "note: process inbox (<N> files)"
 git push
 ```
+
+Git must be configured before this works. See `SETUP.md` in the cursor-skills
+repo if `git config user.email` returns nothing.
 
 ### Step 4: Report
 

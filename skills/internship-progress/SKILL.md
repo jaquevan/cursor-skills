@@ -143,12 +143,12 @@ A chronological list of all notes created, newest first.
 ```bash
 cd ~/Projects/notes
 git add progress/internship-log.md
-git commit --no-gpg-sign \
-  -c user.email="ejaquez@users.noreply.github.com" \
-  -c user.name="ejaquez" \
-  -m "chore: update internship progress log"
+git commit -m "chore: update internship progress log"
 git push
 ```
+
+Git must be configured before this works. See `SETUP.md` in the cursor-skills
+repo if `git config user.email` returns nothing.
 
 ---
 

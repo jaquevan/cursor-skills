@@ -103,15 +103,27 @@ cursor-skills work today"), save it under `projects/<project-name>/` instead.
 
 ## Step 5: Commit and push
 
+**Prerequisite check:** Before committing, verify git is configured:
+
+```bash
+git config user.email
+git config user.name
+```
+
+If either returns nothing, stop and tell the user:
+> Git is not configured. Run the setup steps in `SETUP.md` before notes can be pushed.
+
+Once confirmed, commit and push:
+
 ```bash
 cd ~/Projects/notes
 git add <file>
-git -c user.email="ejaquez@users.noreply.github.com" \
-    -c user.name="ejaquez" \
-    -c commit.gpgsign=false \
-    commit --no-gpg-sign -m "note: <title> (<type>)"
+git commit -m "note: <title> (<type>)"
 git push
 ```
+
+Conventional commit types for notes: `note:` for new notes, `chore:` for
+index/tag updates, `fix:` for corrections to existing notes.
 
 Confirm success and show the relative file path.
 

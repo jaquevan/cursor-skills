@@ -20,6 +20,13 @@ Individual skill repos on GitHub are mirrors of each skill subfolder.
 
 ---
 
+## Getting started
+
+New here? Read **[SETUP.md](SETUP.md)** first — it covers git config, notes repo
+creation, Quarto install, and GitHub push in one place.
+
+---
+
 ## Installing a skill
 
 ```bash

@@ -97,11 +97,12 @@ Tags are sorted alphabetically. Notes under each tag are sorted newest first.
 ```bash
 cd ~/Projects/notes
 git add -A
-git commit -m "chore: update tag index and related notes" --no-gpg-sign \
-  -c user.email="ejaquez@users.noreply.github.com" \
-  -c user.name="ejaquez"
+git commit -m "chore: update tag index and related notes"
 git push
 ```
+
+Git must be configured before this works. See `SETUP.md` in the cursor-skills
+repo if `git config user.email` returns nothing.
 
 ---
 
