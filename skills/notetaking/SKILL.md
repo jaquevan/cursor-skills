@@ -6,7 +6,8 @@ description: >
   Use when the user says "take notes", "format my notes", "meeting notes",
   "standup", "note this down", "document this skill", "summarize this", or pastes
   unstructured text to organize. Also use when the user asks to push, save, or
-  commit notes to GitHub.
+  commit notes to GitHub, or says "reformat this note", "rerun this through
+  the skill", or "fix this note" to reformat an existing file.
 license: MIT
 metadata:
   author: ejaquez
@@ -126,6 +127,25 @@ Conventional commit types for notes: `note:` for new notes, `chore:` for
 index/tag updates, `fix:` for corrections to existing notes.
 
 Confirm success and show the relative file path.
+
+---
+
+## Reformat mode
+
+Triggered when the user says "reformat this note", "rerun this through the
+skill", "fix this note", or points to an existing file in `~/Projects/notes/`.
+
+1. Read the existing note file
+2. Detect its type from the `categories:` frontmatter field
+3. Re-apply the full workflow (Steps 1–4) using the existing content as the
+   raw input — preserve all facts, dates, attendees, and decisions; only
+   update structure, callout syntax, and formatting
+4. Overwrite the file in place
+5. Commit with message `fix: reformat <filename>`
+
+**Do not change the date or slug in the filename.** If the frontmatter already
+has correct metadata, keep it. Only fix formatting issues — wrong callout
+syntax, missing sections, poor structure, style guide violations.
 
 ---
 
