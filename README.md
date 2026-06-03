@@ -7,6 +7,8 @@ Personal Cursor Agent skills for internship workflows, notetaking, and knowledge
 | Skill | Description |
 |---|---|
 | [`notetaking`](skills/notetaking/) | Converts raw notes into structured, beautifully formatted markdown with Quarto callouts, code blocks, and git push |
+| [`tag-scanner`](skills/tag-scanner/) | Scans frontmatter tags across all notes, builds a tag index, and injects Related Notes sections |
+| [`internship-progress`](skills/internship-progress/) | Aggregates meetings, skills, standups, and open action items into a rolling internship progress log |
 
 ## Installing a Skill
 
