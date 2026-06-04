@@ -19,6 +19,8 @@ models:
 
 permissions:
   allow:
+    - "Write(output/**)"
+    - "Write(./output/**)"
     - "Write(/Users/ejaquez/Desktop/Notes Export/**)"
     - "Write(/Users/ejaquez/Desktop/Notes Export/originals/**)"
     - "Read(/Users/ejaquez/.claude/skills/notetaking/**)"
