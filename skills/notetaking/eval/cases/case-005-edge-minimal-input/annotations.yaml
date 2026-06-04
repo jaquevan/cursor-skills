@@ -1,0 +1,8 @@
+content_type: meeting
+expected_tag_count: 5
+has_getting_started: false
+key_facts:
+  - "VLM demo is Thursday at 2pm CT"
+  - "Using staging environment"
+  - "Need to pre-load 3 sample images"
+  - "Beau handles slides, other person handles live demo"

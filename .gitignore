@@ -1,0 +1,21 @@
+# Eval run artifacts (large, machine-specific)
+**/eval/runs/
+**/eval/dataset/
+**/tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Export artifacts (user-specific output)
+*.html
+!skills/*/references/*.html
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+.vscode/
+.idea/

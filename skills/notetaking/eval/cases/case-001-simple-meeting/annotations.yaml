@@ -1,0 +1,11 @@
+content_type: meeting
+expected_tag_count: 6
+has_getting_started: false
+key_facts:
+  - "Decision to proceed with Tekton migration"
+  - "POC target date is June 20"
+  - "Fallback to Jenkins if operator upgrade slips past June 15"
+  - "Tekton operator upgrade from 0.58 to 0.62 needed"
+  - "Cluster upgrade scheduled for June 12"
+  - "4 action items with owners and due dates"
+  - "Image-build pipeline has no Tekton equivalent for Jenkins shared library"

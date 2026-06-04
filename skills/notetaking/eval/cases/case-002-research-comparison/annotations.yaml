@@ -1,0 +1,12 @@
+content_type: research
+expected_tag_count: 7
+has_getting_started: false
+key_facts:
+  - "Claude Code scored 81% accuracy vs CodeRabbit 72% and Qodo Merge 68%"
+  - "Claude Code has lowest false positive rate at 12%"
+  - "Claude Code costs ~$60/month vs $300 (CodeRabbit) and $420 (Qodo Merge)"
+  - "Claude Code caught 7/8 security vulnerabilities"
+  - "Recommendation is Claude Code custom skill"
+  - "Helm chart coverage gap needs Helm-specific patterns"
+  - "Steven Huels approved, budget reallocation starts July 1"
+  - "40 real PRs tested across Go, React, and Helm"

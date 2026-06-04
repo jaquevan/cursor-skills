@@ -1,0 +1,26 @@
+prompt: |
+  Meeting with Platform team — June 2, 2026
+
+  Attendees: Sarah Chen, Marcus Webb, Priya Nair, Derek Olson
+
+  Discussed the migration timeline for moving CI pipelines from Jenkins to Tekton.
+  Sarah said we need to finish the proof of concept by June 20. Marcus raised
+  concerns about the Tekton operator version — we're on 0.58 but need 0.62 for
+  the custom task support. Derek confirmed the cluster upgrade is scheduled for
+  June 12.
+
+  Decision: proceed with Tekton migration. Target June 20 for POC completion.
+  Fallback: if operator upgrade slips past June 15, we revert to Jenkins for
+  the Q3 release and revisit in Q4.
+
+  Action items:
+  - Marcus: file a ticket for the Tekton operator upgrade (due June 6)
+  - Priya: draft the migration runbook covering the 3 critical pipelines (due June 13)
+  - Derek: confirm cluster maintenance window with SRE (due June 10)
+  - Sarah: schedule demo for stakeholders after POC (tentative June 23)
+
+  Priya mentioned that the image-build pipeline uses a Jenkins shared library
+  that has no Tekton equivalent yet. She'll prototype a replacement using
+  Tekton custom tasks once we're on 0.62.
+
+  Next meeting: June 9 standup, same time.
