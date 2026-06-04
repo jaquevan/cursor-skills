@@ -5,20 +5,23 @@ skill: notetaking
 execution:
   mode: case
   arguments: "{prompt}"
-  timeout: 600
+  timeout: 900
 
 runner:
   type: claude-code
 
 models:
-  skill: claude-opus-4-6
-  judge: claude-opus-4-6
+  skill: claude-sonnet-4-6
+  judge: claude-sonnet-4-6
 
 permissions:
   allow:
-    - "Write(~/Desktop/Notes Export/**)"
-    - "Write(/Users/*/Desktop/Notes Export/**)"
-    - "Bash(mkdir -p ~/Desktop/Notes*)"
+    - "Write(/Users/ejaquez/Desktop/Notes Export/**)"
+    - "Write(/Users/ejaquez/Desktop/Notes Export/originals/**)"
+    - "Read(/Users/ejaquez/.claude/skills/notetaking/**)"
+    - "Read(/Users/ejaquez/Projects/cursor-skills/skills/notetaking/**)"
+    - "Bash(mkdir *)"
+    - "Bash(ls *)"
   deny: []
 
 mlflow:
@@ -31,28 +34,21 @@ dataset:
     - input.yaml: YAML file with fields:
       - 'prompt': The raw notes text or instructions to process.
       - 'content_type' (optional): Hint — meeting, research, github, learning, raw.
-    - annotations.yaml: Test metadata for annotation-aware judges:
-      - 'content_type': What kind of input
-      - 'expected_tag_count': Expected number of tags (default 5-8)
-      - 'has_getting_started': true if GitHub/skill input
-      - 'key_facts': List of facts that must be preserved
+    - annotations.yaml: Test metadata for annotation-aware judges.
 
 outputs:
   - path: output
     schema: |
-      The skill writes HTML to ~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html.
+      The skill writes HTML to ~/Desktop/Notes Export/.
 
-      IMPORTANT FOR JUDGES: The HTML file is at an absolute path outside the
-      workspace, so outputs["files"] will be empty. Instead, judges must extract
-      the HTML content from the events.json file in the run directory:
+      FOR JUDGES: The HTML content is inside the events data, specifically in
+      assistant events where tools[].name == "Write" and the path ends in .html.
+      Access via outputs.get("events", []) — NOT via env vars or file reads.
 
-      1. Load events.json for the case
-      2. Find assistant events where tools[].name == "Write"
-      3. Extract tools[].input.content where the path contains ".html"
-      4. That content IS the full HTML output to evaluate
-
-      The check judges below implement this extraction. LLM judges receive
-      the extracted HTML via {{ conversation }} which includes tool call content.
+      Check judges should iterate outputs["events"] to find Write tool calls.
+      LLM judges receive {{ conversation }} which may contain the HTML if the
+      harness includes tool call content. If not visible, instruct judges to
+      check for evidence of HTML generation in process narration.
 
 traces:
   stdout: true
@@ -68,76 +64,59 @@ judges:
 
   - name: html_produced
     description: |
-      Verify the skill created an HTML file by checking the events.json for
-      Write tool calls containing HTML content targeting Notes Export.
+      Verify the skill created an HTML file by checking events for Write tool
+      calls containing HTML content.
     check: |
-      import json, os, glob
-
-      # Try to find the events.json for this case
-      run_dir = os.environ.get("EVAL_RUN_DIR", "")
-      case_id = os.environ.get("EVAL_CASE_ID", "")
-      events_path = ""
-
-      if run_dir and case_id:
-          events_path = os.path.join(run_dir, "cases", case_id, "events.json")
-
-      # Fallback: search in conversation text
+      events = outputs.get("events", [])
       conv = outputs.get("conversation", "")
 
-      if events_path and os.path.exists(events_path):
-          with open(events_path) as f:
-              events = json.load(f)
-          for e in events:
-              if e.get("type") == "assistant" and e.get("tools"):
-                  for t in e["tools"]:
-                      if t.get("name") == "Write":
-                          path = t.get("input", {}).get("file_path", "") or t.get("input", {}).get("path", "")
-                          content = t.get("input", {}).get("content", "")
-                          if ".html" in path and "<!DOCTYPE" in content:
-                              return (True, f"HTML file written to {path} ({len(content)} chars)")
-          return (False, "Write tool calls found but none contained HTML with DOCTYPE")
+      for e in events:
+          if not isinstance(e, dict):
+              continue
+          if e.get("type") == "assistant" and e.get("tools"):
+              for t in e["tools"]:
+                  if t.get("name") == "Write":
+                      inp = t.get("input", {})
+                      path = inp.get("file_path", "") or inp.get("path", "")
+                      content = inp.get("content", "")
+                      if ".html" in path and "<!DOCTYPE" in content:
+                          return (True, f"HTML written to {path} ({len(content)} chars)")
 
-      # Fallback to conversation check
-      has_html = ".html" in conv.lower()
-      has_export = "notes export" in conv.lower() or "desktop" in conv.lower()
-      has_doctype = "<!doctype" in conv.lower() or "<!DOCTYPE" in conv
-      if has_doctype:
-          return (True, "HTML content found directly in conversation")
-      if has_html and has_export:
-          return (True, "HTML file creation referenced in conversation")
-      return (False, "No evidence of HTML file creation in events or conversation")
+          if e.get("type") == "tool_result" and e.get("tool_name") == "Write":
+              content_str = str(e.get("content", ""))
+              if "Wrote" in content_str and ".html" in content_str:
+                  return (True, f"Write confirmed: {content_str[:100]}")
+
+      if "<!DOCTYPE" in conv or "<!doctype" in conv:
+          return (True, "HTML content found in conversation")
+      if ".html" in conv.lower() and ("notes export" in conv.lower() or "desktop" in conv.lower()):
+          return (True, "HTML file referenced in conversation")
+
+      return (False, "No HTML output found in events or conversation")
 
   - name: voice_and_tone
     description: |
-      Verify the output uses neutral third-person documentation voice.
-      Extracts HTML from events if available, falls back to conversation.
+      Verify neutral third-person voice. Extracts HTML from events if possible.
     check: |
-      import json, os
-
-      # Extract HTML from events
       html = ""
-      run_dir = os.environ.get("EVAL_RUN_DIR", "")
-      case_id = os.environ.get("EVAL_CASE_ID", "")
-      if run_dir and case_id:
-          events_path = os.path.join(run_dir, "cases", case_id, "events.json")
-          if os.path.exists(events_path):
-              with open(events_path) as f:
-                  events = json.load(f)
-              for e in events:
-                  if e.get("type") == "assistant" and e.get("tools"):
-                      for t in e["tools"]:
-                          if t.get("name") == "Write":
-                              content = t.get("input", {}).get("content", "")
-                              if "<!DOCTYPE" in content and len(content) > len(html):
-                                  html = content
+      events = outputs.get("events", [])
+      for e in events:
+          if not isinstance(e, dict):
+              continue
+          if e.get("type") == "assistant" and e.get("tools"):
+              for t in e["tools"]:
+                  if t.get("name") == "Write":
+                      content = t.get("input", {}).get("content", "")
+                      if "<!DOCTYPE" in content and len(content) > len(html):
+                          html = content
 
       text = html if html else outputs.get("conversation", "")
       if not text:
           return (False, "No output to check")
 
       issues = []
-      first_person = ["I found", "I recommend", "My recommendation", "I think", "I'd suggest", "I noticed", "I want"]
-      for phrase in first_person:
+      bad = ["I found", "I recommend", "My recommendation", "I think", "I'd suggest", "I noticed", "I want"]
+      for phrase in bad:
           if phrase.lower() in text.lower():
               issues.append(f"'{phrase}'")
       if len(issues) > 2:
@@ -146,65 +125,62 @@ judges:
 
   - name: summary_quality
     description: |
-      Evaluate whether the summary follows quality criteria. The judge receives
-      the full HTML content extracted from Write tool calls via {{ conversation }}.
+      Evaluate summary quality. Judge should look for HTML content in
+      Write tool calls within the conversation.
     prompt: |
-      Evaluate the summary in this notetaking skill output. The skill transforms
-      raw notes into polished HTML reports.
+      Evaluate the summary in the notetaking skill output below.
 
-      IMPORTANT: The HTML output may appear as content within a Write tool call
-      in the conversation below. Look for <!DOCTYPE html> content — that is the
-      actual output to evaluate. Ignore process narration.
+      IMPORTANT: The actual HTML report may appear as content within a Write
+      tool call. Look for <!DOCTYPE html> content — that is the output.
+      If you see HTML, find the summary callout (border-left element near the
+      top with bold text). If no HTML is visible, check process narration for
+      summary text the skill described generating.
 
       {{ conversation }}
 
-      The summary must meet these criteria:
-      1. Answers "What should someone do differently after reading this?"
-      2. Leads with the conclusion or recommendation in bold
-      3. Includes the most compelling number or result (if data is available)
-      4. Is 2-3 sentences — concise, no padding
-      5. Uses neutral third-person voice
-      6. No hedging ("might", "could", "it's important to note that")
-      7. Never starts with "This note covers..." or "We discussed..."
+      Criteria:
+      1. Answers "What should someone do differently?"
+      2. Leads with bold conclusion
+      3. Includes key number/result if available
+      4. 2-3 sentences, no hedging
+      5. Third-person voice
+      6. Never starts with "This note covers..." or "We discussed..."
 
-      Score 1: Summary missing or invisible in the output.
-      Score 2: Summary exists but is vague, too long, or wrong tone.
-      Score 3: Summary answers the question with correct voice but lacks bold lead or data.
-      Score 4: Good summary — bold lead, correct voice, specific. Minor issues only.
-      Score 5: Excellent — bold lead with key insight, compelling data, 2-3 sentences, no hedging.
+      Score 1-5:
+      1: Missing or not visible
+      2: Exists but vague/wrong tone
+      3: Correct voice, lacks bold lead or data
+      4: Good — bold lead, specific, minor issues
+      5: Excellent — bold conclusion, key data, concise, no hedging
 
   - name: content_quality
     description: |
-      Evaluate overall output quality. The judge receives the full HTML content
-      extracted from Write tool calls via {{ conversation }}.
+      Evaluate overall quality of the HTML output.
     prompt: |
-      Evaluate this notetaking skill output for overall quality. The skill transforms
-      raw notes into polished, self-contained HTML reports.
+      Evaluate this notetaking skill output.
 
-      IMPORTANT: The HTML output may appear as content within a Write tool call
-      in the conversation below. Look for <!DOCTYPE html> content — that is the
-      actual output to evaluate. Ignore process narration like "Let me format..."
+      IMPORTANT: The HTML report may appear within a Write tool call. Look
+      for <!DOCTYPE html> content. If you find it, evaluate that HTML
+      directly. If not visible, assess from any process narration about
+      what was generated.
 
       {{ conversation }}
 
-      Assess these dimensions:
+      Dimensions:
+      1. Content preservation — decisions, data, actions preserved
+      2. Filler removal — transcript artifacts cut
+      3. Professional tone — third-person documentation voice
+      4. Design — Red Hat colors (red accents only, no teal/blue flooding),
+         readable contrast, responsive layout
+      5. Structure — logical sections, tables/lists where appropriate,
+         tags present, hat watermark, github.com/ejaquez footer
 
-      1. **Content preservation**: All decisions, data points, action items from
-         the input are preserved. Nothing important was cut.
-      2. **Filler removal**: Transcript artifacts and filler phrases removed.
-      3. **Professional tone**: Third-person documentation voice throughout.
-      4. **Design compliance**: Red Hat brand colors (red #ee0000 accents only,
-         no teal/purple/custom blues), Red Hat fonts, responsive layout,
-         readable contrast on dark sections (text >= #e0e0e0).
-      5. **Structure**: Logical sections, tables/lists/callouts where appropriate.
-         Tags present (5-8, clickable). Red Hat hat watermark in header.
-         github.com/ejaquez credit in footer.
-
-      Score 1: No output or major failures.
-      Score 2: Some content but significant gaps, wrong voice, or design violations.
-      Score 3: Content mostly preserved, correct tone, adequate design. Minor issues.
-      Score 4: All content preserved, professional, good design. Small polish items.
-      Score 5: Comprehensive, impeccable tone, excellent design, all required elements.
+      Score 1-5:
+      1: No output or major failures
+      2: Some content but gaps or design violations
+      3: Mostly preserved, adequate design
+      4: All content, professional, good design
+      5: Comprehensive, impeccable, all required elements
 
 thresholds:
   budget_check:
