@@ -4,7 +4,10 @@ skill: notetaking
 
 execution:
   mode: case
-  arguments: "{prompt}"
+  arguments: |
+    {prompt}
+
+    IMPORTANT: Save the HTML output file to ./output/ in the current working directory (not ~/Desktop/Notes Export/). Create the ./output/ directory if it doesn't exist. Use the standard filename format: YYYY-MM-DD-slug.html.
   timeout: 900
 
 runner:
@@ -39,16 +42,14 @@ dataset:
 outputs:
   - path: output
     schema: |
-      The skill writes HTML to ~/Desktop/Notes Export/.
+      The skill writes HTML to ./output/<YYYY-MM-DD>-<slug>.html (workspace-relative).
+      The eval prompt overrides the default Desktop path to ensure files are
+      collectible by the harness.
 
-      FOR JUDGES: The HTML content is inside the events data, specifically in
-      assistant events where tools[].name == "Write" and the path ends in .html.
-      Access via outputs.get("events", []) — NOT via env vars or file reads.
-
-      Check judges should iterate outputs["events"] to find Write tool calls.
-      LLM judges receive {{ conversation }} which may contain the HTML if the
-      harness includes tool call content. If not visible, instruct judges to
-      check for evidence of HTML generation in process narration.
+      Judges can access the HTML via:
+      1. outputs["files"] — the collector picks up .html from ./output/
+      2. outputs["events"] — Write tool calls contain the HTML content
+      3. {{ outputs }} in LLM judge prompts — renders collected files
 
 traces:
   stdout: true
@@ -64,35 +65,31 @@ judges:
 
   - name: html_produced
     description: |
-      Verify the skill created an HTML file by checking events for Write tool
-      calls containing HTML content.
+      Verify the skill created an HTML file. Checks collected files first,
+      then events, then conversation text.
     check: |
-      events = outputs.get("events", [])
-      conv = outputs.get("conversation", "")
+      files = outputs.get("files", {})
+      for path, content in files.items():
+          if path.endswith(".html") and "<!DOCTYPE" in content:
+              return (True, f"HTML file collected: {path} ({len(content)} chars)")
 
+      events = outputs.get("events", [])
       for e in events:
           if not isinstance(e, dict):
               continue
           if e.get("type") == "assistant" and e.get("tools"):
               for t in e["tools"]:
                   if t.get("name") == "Write":
-                      inp = t.get("input", {})
-                      path = inp.get("file_path", "") or inp.get("path", "")
-                      content = inp.get("content", "")
-                      if ".html" in path and "<!DOCTYPE" in content:
-                          return (True, f"HTML written to {path} ({len(content)} chars)")
+                      content = t.get("input", {}).get("content", "")
+                      path = t.get("input", {}).get("file_path", "") or t.get("input", {}).get("path", "")
+                      if ".html" in str(path) and "<!DOCTYPE" in content:
+                          return (True, f"HTML in Write event: {path} ({len(content)} chars)")
 
-          if e.get("type") == "tool_result" and e.get("tool_name") == "Write":
-              content_str = str(e.get("content", ""))
-              if "Wrote" in content_str and ".html" in content_str:
-                  return (True, f"Write confirmed: {content_str[:100]}")
+      conv = outputs.get("conversation", "")
+      if "<!DOCTYPE" in conv:
+          return (True, "HTML content in conversation")
 
-      if "<!DOCTYPE" in conv or "<!doctype" in conv:
-          return (True, "HTML content found in conversation")
-      if ".html" in conv.lower() and ("notes export" in conv.lower() or "desktop" in conv.lower()):
-          return (True, "HTML file referenced in conversation")
-
-      return (False, "No HTML output found in events or conversation")
+      return (False, "No HTML output found")
 
   - name: voice_and_tone
     description: |

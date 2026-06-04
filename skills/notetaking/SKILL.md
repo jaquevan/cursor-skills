@@ -202,6 +202,10 @@ Every note ends with a dark footer section containing:
 
 Save to: `~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html`
 
+If the write to `~/Desktop/Notes Export/` fails (e.g. in headless or sandboxed
+environments), fall back to writing the HTML file in the current working
+directory instead. Always confirm the actual file path to the user.
+
 If processing a file, move the original to:
 `~/Desktop/Notes Export/originals/<filename>`
 
