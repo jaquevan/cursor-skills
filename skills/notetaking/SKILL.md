@@ -200,11 +200,14 @@ Every note ends with a dark footer section containing:
 
 ### Export
 
-Save to: `~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html`
+Default output path: `~/Desktop/Notes Export/<YYYY-MM-DD>-<slug>.html`
 
-If the write to `~/Desktop/Notes Export/` fails (e.g. in headless or sandboxed
-environments), fall back to writing the HTML file in the current working
-directory instead. Always confirm the actual file path to the user.
+If the user's prompt includes an explicit output directory instruction (e.g.
+"Save to ./output/"), use that path instead of the default. This allows
+eval harnesses and CI systems to redirect output to a collectible location.
+
+If neither the explicit path nor the default Desktop path is writable, fall
+back to the current working directory. Always confirm the actual file path.
 
 If processing a file, move the original to:
 `~/Desktop/Notes Export/originals/<filename>`
