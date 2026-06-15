@@ -1,0 +1,13 @@
+content_type: learning
+expected_tag_count: 6
+has_getting_started: false
+key_facts:
+  - "MCP is Model Context Protocol, created by Anthropic, open-sourced"
+  - "Standardized interface for AI assistants to connect to external tools"
+  - "Key concepts: servers, clients, tools, resources, prompts"
+  - "Transport options: stdio (local) and SSE (remote)"
+  - "Start with 3-5 tools max — too many confuses the AI"
+  - "Tool descriptions matter more than parameter names"
+  - "Use MCP Inspector for debugging: npx @anthropic/mcp-inspector"
+  - "stdio transport hangs if server prints to stdout"
+  - "Next step: build PatternFly component documentation MCP server"

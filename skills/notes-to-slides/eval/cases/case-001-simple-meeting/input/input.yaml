@@ -1,0 +1,32 @@
+prompt: |
+  Turn these meeting notes into slides using the notes-to-slides skill:
+
+  # Team Sync — June 5, 2026
+
+  **Date:** 2026-06-05
+  **Tags:** meeting, standup, team
+
+  ## Summary
+
+  Weekly team sync focused on sprint progress and upcoming deadlines. Three features are on track, one is blocked by an API dependency.
+
+  ## Key Points
+
+  - Feature A shipped to staging on Tuesday
+  - Feature B is 80% complete, needs final review
+  - Feature C blocked by third-party API outage
+  - Sprint ends June 12
+
+  ## Decisions
+
+  - Escalate Feature C blocker to vendor by Monday
+  - Move Feature B review to Wednesday
+
+  ## Next Actions
+
+  - [ ] Alice to file vendor support ticket
+  - [ ] Bob to complete Feature B tests
+  - [ ] Team to demo at Friday standup
+
+  Save the slides output description to ./output/slides-info.txt with the presentation URL and slide count.
+content_type: meeting

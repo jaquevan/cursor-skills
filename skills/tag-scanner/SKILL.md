@@ -7,7 +7,7 @@ description: >
   or "link my notes together".
 license: MIT
 metadata:
-  author: ejaquez
+  author: <YOUR_USERNAME>
   version: 2.0.0
   category: productivity
   tags: [notetaking, tags, index, patternfly]

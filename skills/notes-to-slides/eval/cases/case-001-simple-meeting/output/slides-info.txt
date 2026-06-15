@@ -1,0 +1,10 @@
+URL: https://docs.google.com/presentation/d/1t5xnOGoTXRuW5IBIccuREROnPzGMNfqF-zPHfmvAiEk/edit
+Slides: 5
+Title: Team Sync — June 5, 2026
+
+Slide layout:
+1. Title slide — "Team Sync / June 5, 2026"
+2. Agenda — Sprint Status, Decisions, Next Actions
+3. Sprint Status — Feature A (shipped), Feature B (80%), Feature C (blocked), Sprint end June 12
+4. Decisions — Escalate blocker by Monday, Feature B review moved to Wednesday
+5. Next Actions — Alice: vendor ticket, Bob: Feature B tests, Team: Friday demo

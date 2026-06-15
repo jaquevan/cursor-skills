@@ -1,0 +1,137 @@
+name: notes-to-slides-eval
+description: >
+  Evaluate the notes-to-slides skill's ability to convert structured notes
+  into Red Hat-branded Google Slides presentations using the Standard template.
+
+skill: notes-to-slides
+
+execution:
+  mode: case
+  arguments: |
+    {prompt}
+
+    IMPORTANT: After creating the slides, write a file to ./output/slides-info.txt
+    containing the presentation URL and the number of slides created.
+    Create the ./output/ directory if it doesn't exist.
+  timeout: 120
+
+runner:
+  type: claude-code
+
+models:
+  skill: claude-sonnet-4-6
+  judge: claude-sonnet-4-6
+
+permissions:
+  allow:
+    - "Write(output/**)"
+    - "Write(./output/**)"
+    - "Read(.cursor/skills/notes-to-slides/**)"
+    - "Bash(mkdir *)"
+    - "Bash(ls *)"
+    - "Bash(gws *)"
+    - "Bash(open *)"
+    - "Bash(python3 *)"
+  deny: []
+
+dataset:
+  path: eval/cases
+  schema: |
+    Each case directory contains:
+    - input/input.yaml: YAML file with fields:
+      - 'prompt': The note content and instructions to convert to slides.
+      - 'content_type': Hint — meeting, research, update.
+
+outputs:
+  - path: output
+    schema: |
+      The skill writes a slides-info.txt to ./output/ containing:
+      - The Google Slides presentation URL
+      - The number of slides created
+
+      Judges evaluate based on:
+      1. Whether a presentation was created (URL present in output)
+      2. Whether the slide count is appropriate for the content
+      3. Whether the skill followed template and branding rules
+
+traces:
+  stdout: true
+  stderr: true
+  events: true
+
+judges:
+  - name: presentation-created
+    type: check
+    check: |
+      "docs.google.com/presentation" in outputs.get("files", {}).get("slides-info.txt", "")
+    weight: 1.0
+    description: Verifies a Google Slides presentation URL was produced
+
+  - name: slide-count-reasonable
+    type: prompt
+    prompt: |
+      The notes-to-slides skill converted notes into a Google Slides presentation.
+
+      Original note content type: {{ case.content_type }}
+
+      Skill output:
+      {{ outputs }}
+
+      Evaluate whether the number of slides is appropriate:
+      - A minimal note (1-2 sections) should produce 3-5 slides
+      - A standard note (3-5 sections) should produce 5-8 slides
+      - No presentation should exceed 12 slides
+
+      Score 1.0 if slide count is appropriate, 0.5 if borderline, 0.0 if clearly wrong.
+    weight: 1.0
+    threshold: 0.5
+    description: Checks that slide count matches content density
+
+  - name: template-compliance
+    type: prompt
+    prompt: |
+      The notes-to-slides skill should use the Red Hat Standard Presentation Template.
+
+      Review the skill's output and execution trace:
+      {{ outputs }}
+
+      Check for these compliance requirements:
+      1. The skill copied the Standard template (ID: 1zg_T6Hyxbv_QNF5pauLiHl2QZ41eXyIwAOA1rdspvgM)
+      2. Template elements (images, logos) were preserved (not deleted)
+      3. Only Quick Tip shapes were removed
+      4. Master slide text was cleared
+      5. No text overflow (content fits within character limits)
+
+      Score 1.0 if fully compliant, 0.5 if minor issues, 0.0 if major violations.
+    weight: 1.5
+    threshold: 0.5
+    description: Verifies Red Hat template and branding compliance
+
+  - name: content-accuracy
+    type: prompt
+    prompt: |
+      Compare the original note content with the slides output.
+
+      Original note:
+      {{ case.prompt }}
+
+      Slides output:
+      {{ outputs }}
+
+      Check:
+      1. All key sections from the note are represented in slides
+      2. No facts were fabricated or embellished
+      3. Text was adapted for presentation format (concise, not copied verbatim)
+
+      Score 1.0 if accurate and well-adapted, 0.5 if mostly accurate, 0.0 if inaccurate.
+    weight: 1.0
+    threshold: 0.5
+    description: Verifies slide content matches the source note
+
+thresholds:
+  overall: 0.6
+  per_judge:
+    presentation-created: 0.8
+    slide-count-reasonable: 0.5
+    template-compliance: 0.5
+    content-accuracy: 0.5

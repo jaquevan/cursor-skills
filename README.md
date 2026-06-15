@@ -1,77 +1,120 @@
-# cursor-skills
+# Cursor Skills
 
-Development mono-repo for personal Cursor Agent skills. Each skill has its own
-folder under `skills/` and can be published as a standalone repo for distribution.
+A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and Claude Code. These skills automate personal productivity workflows -- from note-taking and meeting prep to sprint management and daily journaling.
 
 ## Skills
 
-| Skill | Version | Description |
-|---|---|---|
-| [`notetaking`](skills/notetaking/) | 3.1.0 | Transforms raw notes into polished HTML reports with PatternFly 6 styling and Red Hat typography |
-| [`tag-scanner`](skills/tag-scanner/) | 2.0.0 | Scans notes for tags, assigns PF color-coded labels, builds a cross-linked index |
-| [`inbox-processor`](skills/inbox-processor/) | 2.0.0 | Processes files from ~/Desktop/Notes Inbox/ (PDFs, images, text) into formatted notes |
+### Productivity
 
-## Getting started
+| Skill | What it does |
+|-------|-------------|
+| **[work-context](skills/work-context/)** | Aggregates recent activity across Jira, GitHub, Calendar, Slack, Drive, and a local wiki into an interactive Canvas summary |
+| **[meeting-prep](skills/meeting-prep/)** | Cross-source 1:1 prep -- pulls Slack DMs, calendar history, Jira tickets, and Drive docs for a specific person into a Canvas with prioritized talking points |
+| **[standup-writer](skills/standup-writer/)** | Auto-drafts a standup update (yesterday/today/blockers) from Jira status changes, PRs, calendar, and Slack |
+| **[session-log](skills/session-log/)** | Scans today's agent transcripts and writes a tagged daily entry into a Second Brain wiki |
+| **[sprint-manager](skills/sprint-manager/)** | Manages Jira sprint transitions -- finds tickets, presents a dashboard, batch-updates sprint assignments and story points |
+| **[tomorrow-calendar-accepted](skills/tomorrow-calendar-accepted/)** | Shows tomorrow's accepted calendar events in a clean schedule |
 
-See **[SETUP.md](SETUP.md)** for full setup instructions (git config, skill
-installation, notes folder structure).
+### Content Pipeline
 
-## Installing a skill
+| Skill | What it does |
+|-------|-------------|
+| **[notetaking-project](skills/notetaking-project/)** | Transforms raw notes into polished, self-contained HTML reports with PatternFly 6 styling |
+| **[notes-to-slides](skills/notes-to-slides/)** | Converts notes into branded Google Slides presentations |
+| **[note-to-email](skills/note-to-email/)** | Converts notes into formatted email drafts |
+| **[source-reader](skills/source-reader/)** | Extracts content from Google Docs, Slides, Slack, Jira, and Drive for downstream processing |
+
+### Knowledge Management
+
+| Skill | What it does |
+|-------|-------------|
+| **[second-brain-ingest](skills/second-brain-ingest/)** | Ingests sources into a local wiki with cross-linking and indexing |
+| **[slack-summary](skills/slack-summary/)** | Summarizes Slack conversations into a Canvas with talking points |
+| **[inbox-processor](skills/inbox-processor/)** | Processes files from a desktop inbox folder |
+| **[tag-scanner](skills/tag-scanner/)** | Scans notes for tags and builds a cross-linked index |
+
+### Utilities
+
+| Skill | What it does |
+|-------|-------------|
+| **[rover-lookup](skills/rover-lookup/)** | Looks up colleagues in an internal directory |
+| **[slack-login](skills/slack-login/)** | Extracts Slack tokens via browser login and configures Slack MCP |
+| **[run-evals](skills/run-evals/)** | Runs skill evaluations using the agent-eval-harness |
+| **[friendly-greeter](skills/friendly-greeter/)** | Greets the user by name |
+| **[friendly-farewell](skills/friendly-farewell/)** | Says goodbye to the user |
+
+## How Skills Compose
+
+These skills are designed to compose with each other rather than work in isolation:
+
+- **meeting-prep** delegates Slack thread grouping to **slack-summary** and doc extraction to **source-reader**
+- **standup-writer** reuses **work-context** data gathering patterns with a narrower time window
+- **session-log** delegates wiki integration to **second-brain-ingest**
+- **notetaking-project** uses **source-reader** as its extraction layer for external sources
+- **notes-to-slides** reads finished HTML notes from **notetaking-project**
+
+## Setup
+
+### Prerequisites
+
+- [Cursor](https://cursor.com) or [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
+- MCP servers configured for the services you use (see below)
+
+### Configuration
+
+These skills use placeholder values that you need to replace with your own. Search for these placeholders across all SKILL.md files and replace them:
+
+| Placeholder | What to put | Where it's used |
+|-------------|------------|-----------------|
+| `<YOUR_ATLASSIAN_CLOUD_ID>` | Your Atlassian cloud ID (UUID) | sprint-manager, work-context, meeting-prep, standup-writer |
+| `<YOUR_EMAIL>` | Your work email | sprint-manager, work-context |
+| `<YOUR_GITHUB_USERNAME>` | Your GitHub username | work-context, standup-writer |
+| `<YOUR_JIRA_PROJECT>` | Your Jira project key (e.g., MYPROJ) | sprint-manager, work-context, standup-writer |
+| `<YOUR_SLACK_MCP_SERVER>` | Your Slack MCP server name from Cursor settings | work-context, standup-writer, meeting-prep |
+| `<YOUR_ATLASSIAN_SITE>` | Your Atlassian site URL (e.g., myorg.atlassian.net) | sprint-manager |
+| `<YOUR_WORKSPACE_PROJECT_ID>` | Your Cursor workspace project ID (found in ~/.cursor/projects/) | session-log, work-context, standup-writer, meeting-prep |
+| `<YOUR_WORKSPACE_PATH>` | Absolute path to your workspace | Various |
+
+### MCP Servers
+
+Skills that interact with external services expect these MCP servers:
+
+| MCP Server | Used by | Purpose |
+|-----------|---------|---------|
+| Atlassian (`user-atlassian` or `plugin-atlassian-atlassian`) | sprint-manager, work-context, meeting-prep, standup-writer | Jira + Confluence |
+| Slack | work-context, meeting-prep, standup-writer, slack-summary | Slack search and history |
+| Google Workspace (`user-google-workspace`) | work-context, meeting-prep, standup-writer, tomorrow-calendar-accepted | Calendar, Drive, Gmail |
+
+### Installing Skills
+
+Copy individual skill directories into your workspace's `.cursor/skills/` folder:
 
 ```bash
-# Copy a skill into Cursor
-cp -r skills/notetaking ~/.cursor/skills/notetaking
-
-# Copy into Claude Code
-cp -r skills/notetaking ~/.claude/skills/notetaking
+cp -r skills/work-context /path/to/your/workspace/.cursor/skills/
 ```
 
-No restart required — skills are available immediately.
-
-## Repo structure
-
-```
-cursor-skills/
-├── README.md
-├── SETUP.md
-├── .gitignore
-└── skills/
-    ├── notetaking/
-    │   ├── SKILL.md              # Main skill instructions
-    │   ├── eval.yaml             # Evaluation config (agent-eval-harness)
-    │   ├── eval/cases/           # Test cases
-    │   ├── references/
-    │   │   └── component-map.md  # HTML component reference
-    │   └── assets/
-    │       └── redhat-hat.svg    # Red Hat fedora logo
-    ├── tag-scanner/
-    │   └── SKILL.md
-    └── inbox-processor/
-        └── SKILL.md
-```
-
-## Publishing individual skills
-
-Each skill can be published as its own GitHub repo for distribution:
+Or symlink them:
 
 ```bash
-# Create standalone repo for a skill
-mkdir /tmp/cursor-skill-notetaking
-cp -r skills/notetaking/* /tmp/cursor-skill-notetaking/
-cd /tmp/cursor-skill-notetaking
-git init && git add . && git commit -m "feat: initial release"
-# Then create the repo on GitHub and push
+ln -s /path/to/cursor-skills/skills/work-context /path/to/your/workspace/.cursor/skills/work-context
 ```
 
-## Evaluating skills
+## Skill Format
 
-This repo uses [agent-eval-harness](https://github.com/opendatahub-io/agent-eval-harness)
-for automated skill evaluation. Each skill with an `eval.yaml` can be tested:
+Every skill follows the [Agent Skills standard](https://agentskills.io):
 
-```bash
-claude --plugin-dir ~/Projects/agent-eval-harness
-/eval-run --skill notetaking --model claude-opus-4-6
+```
+skills/<skill-name>/
+├── SKILL.md          # Required -- skill definition with YAML frontmatter
+├── reference.md      # Optional -- deep reference material
+├── scripts/          # Optional -- automation scripts
+├── references/       # Optional -- supporting docs
+├── templates/        # Optional -- output templates
+├── assets/           # Optional -- static files (SVGs, images)
+├── eval.yaml         # Optional -- eval harness config
+└── eval/             # Optional -- test cases
 ```
 
-Eval run artifacts (in `eval/runs/`) are gitignored — they contain
-machine-specific paths and large event logs.
+## License
+
+MIT

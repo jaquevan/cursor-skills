@@ -1,0 +1,10 @@
+URL: https://docs.google.com/presentation/d/1VWkxRSDj_iCrMn0HWLa2eb22LSuHIEYXhbPRscoHz48/edit
+Slides: 5
+Title: UX Audit Findings — Dashboard Redesign
+
+Slide layout:
+1. Title slide — "UX Audit Findings / Dashboard Redesign"
+2. Agenda — Key Findings, Decisions, Next Actions (June 3, 2026)
+3. Key Findings — Alert visibility (2.1/5), Navigation depth, Color contrast (WCAG AA), Mobile responsiveness, Search latency (3.2s)
+4. Decisions — Alert panel redesign prioritized, accessibility remediation with PatternFly
+5. Next Actions — Wireframes for alert panel, schedule accessibility review, benchmark search performance

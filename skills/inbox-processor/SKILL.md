@@ -8,7 +8,7 @@ description: >
   or "process this file".
 license: MIT
 metadata:
-  author: ejaquez
+  author: <YOUR_USERNAME>
   version: 2.0.0
   category: productivity
   tags: [notetaking, inbox, pdf, images]

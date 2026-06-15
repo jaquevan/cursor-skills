@@ -1,0 +1,7 @@
+URL: https://docs.google.com/presentation/d/1FJAFtZrB61xD-qKJZ9T4dyoCpsanh8ZN-6f-fzfKUzI/edit
+Slides: 2
+Title: Quick Update — June 6, 2026
+
+Slide layout:
+1. Title slide — "Quick Update / June 6, 2026"
+2. Onboarding Complete — HR paperwork done, dev environment configured (VPN + tools), intro meetings attended

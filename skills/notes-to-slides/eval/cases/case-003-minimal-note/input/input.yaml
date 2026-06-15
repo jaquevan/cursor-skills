@@ -1,0 +1,19 @@
+prompt: |
+  Turn these brief notes into slides using the notes-to-slides skill:
+
+  # Quick Update
+
+  **Date:** 2026-06-06
+
+  ## Summary
+
+  Completed onboarding tasks and set up development environment.
+
+  ## Key Points
+
+  - Finished all HR paperwork
+  - Got laptop configured with VPN and tools
+  - Attended intro meetings with team
+
+  Save the slides output description to ./output/slides-info.txt with the presentation URL and slide count.
+content_type: update

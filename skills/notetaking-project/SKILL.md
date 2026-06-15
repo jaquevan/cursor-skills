@@ -6,7 +6,9 @@ description: >
   "format my notes", "format this", "process my inbox", pastes unstructured
   text, or points to a file. Also use when the user says "reformat this note"
   or "fix this note". Also use when the user shares a GitHub repo URL or
-  skill path and wants to document it. Outputs a styled HTML file to
+  skill path and wants to document it. Also use when the user shares a Google
+  Doc URL, Google Slides URL, Slack channel, Jira issue key, or any external
+  source and asks to make notes from it. Outputs a styled HTML file to
   ~/Desktop/Notes Export/.
 license: MIT
 metadata:
@@ -24,6 +26,27 @@ email to your manager, share in Slack, or keep as an internship artifact.
 
 ---
 
+## Step 0: Extract content from external sources
+
+Before processing, check if the user's prompt contains a reference to an
+external source. If it does, extract the content first using the instructions
+in the `source-reader` skill at `.cursor/skills/source-reader/SKILL.md`.
+
+| Pattern | Source | How to extract |
+|---|---|---|
+| `docs.google.com/document/d/<id>` | Google Doc | `gws docs documents get` — walk `body.content` paragraphs |
+| `docs.google.com/presentation/d/<id>` | Google Slides | `gws slides presentations get` — extract text from each slide |
+| `#channel-name` or Slack context | Slack channel | Slack MCP `get_channel_history` or `search_messages` |
+| `@person` or `from:person` | Slack DMs | Slack MCP `search_messages` with `from:` / `to:` queries |
+| `PROJ-1234` pattern | Jira issue | Dataverse MCP pipeline: `shortlist_tables` → `get_sql` → `execute_sql` |
+| `drive.google.com/file/d/<id>` | Drive file | `gws drive files get` to detect type, then extract accordingly |
+
+If the input is pasted text or a local file, skip this step.
+
+After extraction, record the source name and URL for the footer attribution.
+
+---
+
 ## How to process content
 
 ### Detecting content type
@@ -35,6 +58,9 @@ Before formatting, identify what kind of input this is:
 | Meeting notes | Extract decisions, actions, discussion. Standard layout. |
 | Research / analysis | Lead with findings. Use tables for comparisons. |
 | **GitHub repo / skill** | Read the README and/or SKILL.md. Build a quick-start at the top. |
+| **Google Doc / Slides** | Treat extracted text as the raw input. Preserve doc structure. |
+| **Slack conversation** | Treat messages as meeting notes. Group by topic thread. |
+| **Jira issues** | Treat as a status report. Lead with summary, list issues. |
 | Learning notes | Key concepts first, then details. |
 | Raw paste | Detect type from content, then apply the right approach. |
 
@@ -184,9 +210,13 @@ summary, before the main content.
 ### Footer
 
 Every note ends with a dark footer section containing:
-1. Link to original source (if processing a file)
-2. Any relevant external links
-3. **Always last**: credit line linking to the author's GitHub:
+1. **Source attribution** (if content came from an external source):
+   "Source: <source type> — <document name or URL>"
+   For example: "Source: Google Doc — RH AI UX MaaS living insights"
+   or "Source: Slack — #uxd-research-team (May 26 – Jun 8, 2026)"
+2. Link to original source (if processing a file)
+3. Any relevant external links
+4. **Always last**: credit line linking to the author's GitHub:
    `github.com/<YOUR_GITHUB_USERNAME>`
 
 ### Responsive padding

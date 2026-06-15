@@ -1,0 +1,33 @@
+prompt: |
+  Turn these research notes into slides using the notes-to-slides skill:
+
+  # UX Audit Findings — Dashboard Redesign
+
+  **Date:** 2026-06-03
+  **Tags:** research, ux-audit, dashboard
+
+  ## Summary
+
+  Usability audit of the monitoring dashboard revealed 5 critical issues affecting task completion. Users averaged 4.2 clicks to find alerts, versus the target of 2 clicks.
+
+  ## Key Points
+
+  - Alert visibility scored 2.1/5 in user testing
+  - Navigation depth is 3 levels too deep for common tasks
+  - Color contrast fails WCAG AA on 12 of 30 components
+  - Mobile responsiveness breaks below 768px
+  - Search latency averages 3.2 seconds vs 1 second target
+
+  ## Decisions
+
+  - Prioritize alert panel redesign for next sprint
+  - Engage accessibility team for contrast remediation
+
+  ## Next Actions
+
+  - [ ] Create wireframes for simplified alert panel
+  - [ ] Schedule accessibility review with PatternFly team
+  - [ ] Benchmark search performance after indexing update
+
+  Save the slides output description to ./output/slides-info.txt with the presentation URL and slide count.
+content_type: research

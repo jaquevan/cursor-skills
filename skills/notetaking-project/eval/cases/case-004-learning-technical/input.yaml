@@ -1,0 +1,56 @@
+prompt: |
+  Learning notes — MCP (Model Context Protocol) deep dive
+
+  What is MCP:
+  Protocol that lets AI assistants connect to external tools and data sources.
+  Think of it like USB-C for AI — standardized interface so any AI client
+  can talk to any MCP server.
+
+  Created by Anthropic, open-sourced. Growing ecosystem — now supported by
+  Claude Code, Cursor, Windsurf, and others.
+
+  Key concepts:
+  - MCP Server: wraps an external capability (Jira, GitHub, Postgres, etc.)
+    and exposes it as tools + resources
+  - MCP Client: the AI assistant that connects to servers
+  - Tools: functions the AI can call (create_issue, query_database)
+  - Resources: data the AI can read (file contents, database schemas)
+  - Prompts: reusable prompt templates the server provides
+
+  Architecture:
+  - Transport: stdio (local) or SSE (remote)
+  - Protocol: JSON-RPC 2.0
+  - Discovery: client reads server capabilities on connect
+  - Auth: OAuth 2.1 for remote servers (new in 2026 spec)
+
+  Building a server (Python SDK):
+  - pip install mcp
+  - Use @server.tool() decorator for tools
+  - Use @server.resource() decorator for resources
+  - Run with: python -m mcp.server.stdio my_server.py
+
+  What I learned from building the Jira MCP server:
+  - Start with 3-5 tools max. More tools = more confusion for the AI about
+    which to pick. We started with 12 and the AI kept calling the wrong one.
+  - Tool descriptions matter more than parameter names. The AI reads the
+    description to decide when to use a tool. Be explicit about when NOT
+    to use it.
+  - Error messages should be actionable. "Auth failed" is useless.
+    "Auth failed — check JIRA_TOKEN env var is set and not expired" is good.
+  - Pagination: always implement it for list operations. The AI doesn't
+    handle 500-item responses well. Default page size of 25 works.
+  - Testing: use the MCP Inspector (npx @anthropic/mcp-inspector) for
+    interactive debugging. Saved hours vs guessing why tools weren't working.
+
+  Gotchas:
+  - stdio transport hangs if server prints to stdout accidentally (logging
+    must go to stderr)
+  - SSE transport has a 30-second idle timeout in some proxies — add
+    keepalive pings
+  - Tool parameters with complex nested objects confuse the AI. Flatten
+    to simple key-value when possible.
+  - Resource URIs must be unique across all servers connected to one client
+
+  Next steps: build MCP server for PatternFly component documentation.
+  Should expose tools for searching components, getting usage examples,
+  and checking accessibility guidelines.

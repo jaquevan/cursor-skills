@@ -1,0 +1,45 @@
+prompt: |
+  Evaluated three LLM-based code review tools for the ADLC pipeline integration.
+  Spent two weeks testing each on 40 real PRs from the platform repo (mix of
+  Go backend, React frontend, and Helm chart changes).
+
+  Tools tested:
+  1. CodeRabbit (SaaS) — $15/seat/month
+  2. Qodo Merge (self-hosted option) — $12/seat/month + infra
+  3. Claude Code with custom review skill — ~$0.30/review average
+
+  Results:
+
+  Accuracy (agreed with human reviewer):
+  - CodeRabbit: 72% (29/40)
+  - Qodo Merge: 68% (27/40)
+  - Claude Code: 81% (32.5/40, partial credit on 1)
+
+  False positive rate (flagged non-issues):
+  - CodeRabbit: 23% — frequently flags style issues already covered by linters
+  - Qodo Merge: 31% — worst offender, flags too many "potential" issues
+  - Claude Code: 12% — lowest noise, but occasionally misses Helm-specific patterns
+
+  Latency (median review time):
+  - CodeRabbit: 45 seconds
+  - Qodo Merge: 2.1 minutes (self-hosted, limited GPU)
+  - Claude Code: 1.8 minutes
+
+  Security finding detection (injected 8 known vulns across test PRs):
+  - CodeRabbit: 5/8 caught
+  - Qodo Merge: 6/8 caught
+  - Claude Code: 7/8 caught (missed one subtle SSRF in Helm values)
+
+  Cost projection for team of 20, ~200 reviews/month:
+  - CodeRabbit: $300/month
+  - Qodo Merge: $240/month + $180 infra = $420/month
+  - Claude Code: ~$60/month
+
+  Recommendation: go with Claude Code custom skill. 5x cheaper than CodeRabbit,
+  higher accuracy, lower false positive rate. The latency difference (1.8 min vs
+  45 sec) is acceptable since reviews aren't blocking. Only gap is Helm chart
+  coverage — we should add Helm-specific patterns to the review skill.
+
+  Steven Huels approved the recommendation. Budget reallocation from CodeRabbit
+  trial to Claude Code API costs starts July 1.
+content_type: research

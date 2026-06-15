@@ -1,0 +1,64 @@
+prompt: |
+  Weekly standup — InstructLab onboarding progress — May 28, 2026
+
+  Zack started by saying um so basically we've been working on getting the
+  InstructLab taxonomy contribution workflow figured out. He mentioned that
+  it's important to note that the process is more involved than we initially
+  thought. So basically there are three main steps — first you fork the
+  taxonomy repo, then you create a qna.yaml file with your knowledge
+  contribution, and then you run the ilab diff command to validate.
+
+  As I mentioned earlier, the validation step is where most people get stuck.
+  Zack said that he spent about 4 hours trying to debug a YAML formatting
+  issue that turned out to be a tab-vs-spaces problem. So basically the
+  lesson there is to always use spaces, never tabs, in the qna.yaml files.
+
+  Then we moved on to discussing the model training pipeline. Priya explained
+  that, um, the ilab train command requires at least 16GB of VRAM for the
+  granite-7b model. She tested on an A100 and it took about 3 hours for
+  100 training samples. On a consumer GPU like the RTX 4090 (24GB VRAM),
+  it's slower — roughly 5 hours for the same dataset.
+
+  It's important to note that the quality of the training data matters more
+  than the quantity. Priya showed results from two experiments:
+  - Experiment A: 200 low-quality samples (copied from docs with minimal editing)
+    → model accuracy dropped 2% on the benchmark
+  - Experiment B: 50 hand-crafted samples with diverse question formats
+    → model accuracy improved 8% on the benchmark
+
+  We then discussed whether we should contribute upstream or maintain an
+  internal fork. At the end of the day, Marcus said the upstream contribution
+  path is better because we get community review and our contributions
+  become part of the official model. But the review cycle is 2-3 weeks,
+  which is slow for our sprint cadence.
+
+  Decision: contribute upstream for stable knowledge domains (product docs,
+  architecture). Use internal fork for fast-iteration experimental domains
+  (customer-specific patterns, internal tooling docs).
+
+  Next we moved to the tooling setup. Derek reported that the ilab CLI
+  version 0.17.1 has a bug where the generate command hangs on Apple Silicon
+  when using the default vLLM backend. The workaround is to use the llama-cpp
+  backend with --backend llama-cpp flag. He filed an issue upstream and it's
+  being tracked in InstructLab issue #1847.
+
+  So basically the action items from this meeting are:
+  - Zack: write an internal guide for taxonomy contributions (due June 4)
+    emphasizing the tabs-vs-spaces gotcha and include a template qna.yaml
+  - Priya: set up a shared A100 instance on GCP for team training runs
+    (budget approved, $800/month estimate, due June 6)
+  - Derek: pin the team to ilab CLI 0.17.0 until the Apple Silicon bug
+    is fixed (do this today)
+  - Marcus: start the first upstream taxonomy PR for OpenShift architecture
+    knowledge (target June 11, needs Zack's guide first)
+
+  Priya also mentioned that she's been experimenting with LoRA fine-tuning
+  as an alternative to full InstructLab training for smaller knowledge
+  domains. Early results show comparable accuracy at 10x less compute time.
+  She'll present detailed results next standup.
+
+  Oh also, Zack brought up that we should probably coordinate with the
+  Melbourne team since they're also looking at InstructLab for their
+  customer support model. He'll ping their Slack channel this week.
+
+  Next standup: June 4, 9:30am CT.
