@@ -12,8 +12,9 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 | **[meeting-prep](skills/meeting-prep/)** | Cross-source 1:1 prep -- pulls Slack DMs, calendar history, Jira tickets, and Drive docs for a specific person into a Canvas with prioritized talking points |
 | **[standup-writer](skills/standup-writer/)** | Auto-drafts a standup update (yesterday/today/blockers) from Jira status changes, PRs, calendar, and Slack |
 | **[session-log](skills/session-log/)** | Scans today's agent transcripts and writes a tagged daily entry into a Second Brain wiki |
-| **[sprint-manager](skills/sprint-manager/)** | Manages Jira sprint transitions -- finds tickets, presents a dashboard, batch-updates sprint assignments and story points |
+| **[sprint-manager](skills/sprint-manager/)** | Manages Jira sprint transitions -- finds tickets, presents a dashboard, batch-updates sprint assignments, story points, and status |
 | **[tomorrow-calendar-accepted](skills/tomorrow-calendar-accepted/)** | Shows tomorrow's accepted calendar events in a clean schedule |
+| **[doc-sync](skills/doc-sync/)** | Detects documentation drift between code and docs in a project |
 
 ### Content Pipeline
 
@@ -23,6 +24,7 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 | **[notes-to-slides](skills/notes-to-slides/)** | Converts notes into branded Google Slides presentations |
 | **[note-to-email](skills/note-to-email/)** | Converts notes into formatted email drafts |
 | **[source-reader](skills/source-reader/)** | Extracts content from Google Docs, Slides, Slack, Jira, and Drive for downstream processing |
+| **[humanize-text](skills/humanize-text/)** | Rewrites AI-generated text to sound more natural and human |
 
 ### Knowledge Management
 
@@ -33,6 +35,21 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 | **[inbox-processor](skills/inbox-processor/)** | Processes files from a desktop inbox folder |
 | **[tag-scanner](skills/tag-scanner/)** | Scans notes for tags and builds a cross-linked index |
 
+### Writing and Review
+
+| Skill | What it does |
+|-------|-------------|
+| **[critique](skills/critique/)** | Provides structured feedback on writing, presentations, or documents |
+| **[superpowers](skills/superpowers/)** | Enhances agent capabilities with advanced reasoning and problem-solving patterns |
+
+### Skill Development
+
+| Skill | What it does |
+|-------|-------------|
+| **[skill-creator](skills/skill-creator/)** | Scaffolds new Cursor Agent Skills following established project conventions |
+| **[skill-to-github](skills/skill-to-github/)** | Publishes skills to GitHub after scrubbing sensitive data, enforcing git identity, and stripping AI attribution |
+| **[skill-guide](skills/skill-guide/)** | Reference guide for skill authoring best practices |
+
 ### Utilities
 
 | Skill | What it does |
@@ -40,8 +57,6 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 | **[rover-lookup](skills/rover-lookup/)** | Looks up colleagues in an internal directory |
 | **[slack-login](skills/slack-login/)** | Extracts Slack tokens via browser login and configures Slack MCP |
 | **[run-evals](skills/run-evals/)** | Runs skill evaluations using the agent-eval-harness |
-| **[friendly-greeter](skills/friendly-greeter/)** | Greets the user by name |
-| **[friendly-farewell](skills/friendly-farewell/)** | Says goodbye to the user |
 
 ## How Skills Compose
 
@@ -52,6 +67,7 @@ These skills are designed to compose with each other rather than work in isolati
 - **session-log** delegates wiki integration to **second-brain-ingest**
 - **notetaking-project** uses **source-reader** as its extraction layer for external sources
 - **notes-to-slides** reads finished HTML notes from **notetaking-project**
+- **skill-to-github** enforces identity rules from the **github** skill and references **sensitive-patterns.md**
 
 ## Setup
 

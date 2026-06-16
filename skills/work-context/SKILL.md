@@ -52,7 +52,7 @@ The only acceptable user prompts are in:
 | Second Brain wiki | Local knowledge base | `~/second-brain/wiki/` directory exists |
 
 - **Atlassian cloud ID:** `<YOUR_ATLASSIAN_CLOUD_ID>`
-- **GitHub username:** `<YOUR_GITHUB_USERNAME>`
+- **GitHub username:** `jaquevan`
 - **User identity:** read `Me.md` in the workspace root for name and email
 
 ## Workflow
@@ -150,16 +150,16 @@ Categorize results:
 Use the `gh` CLI (shell commands). Fire these in parallel:
 
 ```bash
-gh search prs --author="<YOUR_GITHUB_USERNAME>" --created="{START_JQL}..{END_JQL}" \
+gh search prs --author="jaquevan" --created="{START_JQL}..{END_JQL}" \
   --json title,url,state,createdAt,repository --limit 50
 
-gh search prs --reviewed-by="<YOUR_GITHUB_USERNAME>" --created="{START_JQL}..{END_JQL}" \
+gh search prs --reviewed-by="jaquevan" --created="{START_JQL}..{END_JQL}" \
   --json title,url,state,createdAt,repository --limit 25
 
-gh search issues --author="<YOUR_GITHUB_USERNAME>" --created="{START_JQL}..{END_JQL}" \
+gh search issues --author="jaquevan" --created="{START_JQL}..{END_JQL}" \
   --json title,url,state,createdAt,repository --limit 25
 
-gh api "search/commits?q=author:<YOUR_GITHUB_USERNAME>+committer-date:{START_JQL}..{END_JQL}&per_page=50&sort=committer-date" \
+gh api "search/commits?q=author:jaquevan+committer-date:{START_JQL}..{END_JQL}&per_page=50&sort=committer-date" \
   --jq '.items[] | {message: .commit.message, date: .commit.committer.date, repo: .repository.full_name, url: .html_url}'
 ```
 

@@ -1,0 +1,28 @@
+{
+  "skill_name": "doc-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "doc-sync check local docs",
+      "expected_output": "A drift report scanning README, SKILL.md files, and any docs/ directory against actual code",
+      "assertions": [
+        "Output mentions scanning local documentation files",
+        "Output checks at least some SKILL.md files in .cursor/skills/",
+        "Output reports findings organized by severity (critical, stale, minor) or states docs are current",
+        "Output offers to fix any issues found in local files",
+        "No HTML files or artifacts are generated"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "doc-sync just the SKILL.md files",
+      "expected_output": "Focused drift report on skill descriptions vs actual skill behavior",
+      "assertions": [
+        "Output focuses specifically on SKILL.md files, not all documentation",
+        "Output checks whether skill descriptions match what the skills actually do",
+        "Output identifies any skills with broken or misleading descriptions",
+        "Findings are prioritized by severity"
+      ]
+    }
+  ]
+}

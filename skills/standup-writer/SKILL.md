@@ -132,13 +132,13 @@ searchJiraIssuesUsingJql(
 Reuse `work-context` Step 3b with `SINCE_DATE`:
 
 ```bash
-gh search prs --author="<YOUR_GITHUB_USERNAME>" --created="{SINCE_DATE}..{TODAY}" \
+gh search prs --author="jaquevan" --created="{SINCE_DATE}..{TODAY}" \
   --json title,url,state,createdAt,repository --limit 25
 
-gh search prs --reviewed-by="<YOUR_GITHUB_USERNAME>" --created="{SINCE_DATE}..{TODAY}" \
+gh search prs --reviewed-by="jaquevan" --created="{SINCE_DATE}..{TODAY}" \
   --json title,url,state,createdAt,repository --limit 10
 
-gh api "search/commits?q=author:<YOUR_GITHUB_USERNAME>+committer-date:{SINCE_DATE}..{TODAY}&per_page=25&sort=committer-date" \
+gh api "search/commits?q=author:jaquevan+committer-date:{SINCE_DATE}..{TODAY}&per_page=25&sort=committer-date" \
   --jq '.items[] | {message: .commit.message, date: .commit.committer.date, repo: .repository.full_name}'
 ```
 

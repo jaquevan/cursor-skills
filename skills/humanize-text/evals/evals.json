@@ -1,0 +1,43 @@
+{
+  "skill_name": "humanize-text",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Humanize this: I wanted to reach out regarding the prototype-creator evaluation framework I've been developing. It's important to note that the tool leverages Playwright-based persona walkthroughs to comprehensively assess prototypes against their Jira acceptance criteria. I'd be happy to schedule a meeting to delve into the technical details — the evaluation covers seven usability dimensions and produces a robust HTML report. I believe this could be truly transformative for our workflow. Please don't hesitate to reach out if you have any questions.",
+      "expected_output": "A casual Slack message in Evan's voice with no dashes, no AI buzzwords, and natural abbreviations",
+      "assertions": [
+        "Output contains zero em dashes or en dashes (no — or – characters)",
+        "Output does not contain any of: 'delve', 'leverage', 'robust', 'comprehensive', 'transformative', 'don't hesitate'",
+        "Output does not contain 'I wanted to reach out' or 'It's important to note'",
+        "Output sounds casual (contains at least some of: lowercase 'im'/'bc'/'rn', dropped apostrophes, or abbreviations)",
+        "Output preserves the core meaning: eval framework, Playwright walkthroughs, Jira ACs, HTML report",
+        "Output ends with a 'Changed:' summary noting what was fixed",
+        "Output is shorter than the input text"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Respond to this message from my manager: Hey Evan, wanted to check in on progress with the prototype evaluator. Any blockers? Also wondering if you've had a chance to look at the consistency checker integration we discussed last week.",
+      "expected_output": "A casual reply in Evan's voice addressing both questions",
+      "assertions": [
+        "Output contains zero em dashes or en dashes",
+        "Output addresses both questions (prototype evaluator progress AND consistency checker)",
+        "Output sounds like a casual Slack reply, not a formal email",
+        "Output does not start with 'I hope this message finds you' or similar formal opener",
+        "Output is appropriately short for a Slack reply (not an essay)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Make this sound like me: I would like to express my interest in contributing to the working group. I have extensive experience with evaluation frameworks and would be delighted to share my insights. Furthermore, I believe my background in user experience research — combined with my technical skills — would make me a valuable addition to the team.",
+      "expected_output": "Casual, humble expression of interest matching Evan's intern voice",
+      "assertions": [
+        "Output contains zero em dashes or en dashes",
+        "Output does not contain 'would like to express', 'extensive experience', 'delighted', 'furthermore', 'valuable addition'",
+        "Output sounds humble and curious, not self-promoting",
+        "Output preserves the intent of wanting to join the working group",
+        "Tone matches an enthusiastic intern, not a senior executive"
+      ]
+    }
+  ]
+}

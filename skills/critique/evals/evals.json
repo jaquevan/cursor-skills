@@ -1,0 +1,44 @@
+{
+  "skill_name": "critique",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Critique this idea: I want to build an internal tool at Red Hat that uses AI agents to automatically generate usability test reports from Jira acceptance criteria. The agents would take a STRAT ticket, extract the ACs, run Playwright walkthroughs against a running prototype, score 7 usability dimensions, and produce an HTML report. This would replace manual usability evaluations that currently take researchers 2-3 hours per prototype.",
+      "expected_output": "3-5 specific critiques with research backing, a clear verdict, and de-risk suggestions",
+      "assertions": [
+        "Output contains between 3 and 5 numbered critiques",
+        "Each critique has a 'What if' scenario describing what could go wrong",
+        "Each critique has a 'De-risk it' suggestion with a concrete action",
+        "Output contains a verdict section with one of: 'strong enough to commit', 'needs one fix', or 'rethink this part'",
+        "At least one critique references real-world data, research, or precedent from web search",
+        "No HTML files are generated (output is conversational only)",
+        "Output starts with a 2-sentence summary of the idea being critiqued"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Stress test this: We're thinking about switching our entire frontend from React to Svelte because one engineer tried it on a side project and liked it. The main app is 200k lines of React code with 50+ components. We'd do it incrementally over 6 months.",
+      "expected_output": "Sharp critiques about migration risk, team readiness, and opportunity cost with research grounding",
+      "assertions": [
+        "Output contains between 3 and 5 numbered critiques",
+        "At least one critique addresses the scale of migration (200k lines)",
+        "At least one critique questions the evidence basis (one engineer's side project)",
+        "Output contains a verdict section",
+        "No dashes are used as clause separators or dramatic pauses",
+        "Tone is curious and questioning, not hostile or dismissive"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Poke holes in this: I want to create a Slack bot that summarizes every channel at the end of the day and posts a digest. This would save our 50-person team from reading hundreds of messages across 20 channels.",
+      "expected_output": "Critiques covering privacy, signal-to-noise, adoption risk, and simpler alternatives",
+      "assertions": [
+        "Output contains between 3 and 5 numbered critiques",
+        "At least one critique addresses privacy or sensitivity of auto-summarizing conversations",
+        "Each critique includes both a 'What if' and 'De-risk it' section",
+        "Output contains a verdict",
+        "No HTML files or artifacts are generated"
+      ]
+    }
+  ]
+}

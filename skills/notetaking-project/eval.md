@@ -38,7 +38,7 @@ Each eval case provides a `prompt` field in `input.yaml` containing the raw note
 
 The skill reads two companion files from its own directory at runtime:
 - `references/component-map.md` — HTML component patterns, CSS snippets, color palette reference
-- `assets/hat-watermark.svg` — Red Hat fedora branding SVG for header watermark
+- `assets/redhat-hat.svg` — Red Hat fedora branding SVG for header watermark
 
 ## Outputs
 

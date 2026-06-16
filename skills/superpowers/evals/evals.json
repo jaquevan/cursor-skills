@@ -1,0 +1,42 @@
+{
+  "skill_name": "superpowers",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "brainstorm deep dive ideas for improving the agent eval harness at Red Hat. We currently have skills that create prototypes and evaluate them but the feedback loop between creation and evaluation is slow and manual.",
+      "expected_output": "4-5 ideas in deep dive format with title, pitch, why it works, risk, and first step",
+      "assertions": [
+        "Output contains between 4 and 5 distinct ideas",
+        "Each idea has a title",
+        "Each idea has a 'Why it works' or equivalent insight section",
+        "Each idea has a 'Risk' or biggest risk section",
+        "Each idea has a 'First step' or concrete next action",
+        "Output ends with a prompt asking the user which idea to explore further",
+        "No HTML files or artifacts are generated"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "superpowers wildcard ideas for making our intern onboarding better. Right now new interns read docs for a week and shadow people.",
+      "expected_output": "5-7 ideas pulled from unrelated domains with surprising connections",
+      "assertions": [
+        "Output contains between 5 and 7 ideas",
+        "Each idea references a specific domain outside of tech onboarding (biology, sports, cooking, etc.)",
+        "Each idea explains how a principle from that domain applies to intern onboarding",
+        "Ideas are genuinely surprising, not obvious suggestions like 'use a buddy system'",
+        "Output ends with a follow-up prompt"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "remix this idea: a daily standup bot that posts what everyone worked on yesterday by reading their git commits and Jira updates",
+      "expected_output": "8 variations using the remix lenses (combine, invert, scale up/down, simplify, complicate, time shift, audience swap)",
+      "assertions": [
+        "Output contains exactly 8 variations",
+        "Variations use distinct creative lenses (combine, invert, scale up, scale down, simplify, complicate, time shift, audience swap)",
+        "Each variation describes a concrete twist, not just a rephrasing",
+        "Output ends with a follow-up prompt"
+      ]
+    }
+  ]
+}
