@@ -46,12 +46,12 @@ For a single match, present a clean summary:
 
 ```
 **Name:** Jane Doe
-**Email:** <EXAMPLE_EMAIL>
+**Email:** jdoe@redhat.com
 **Title:** Senior Software Engineer
 **Location:** RH - Raleigh, USA
 **Hire Date:** January 15, 2023
 **Work Profile:** Office-Flex
-**Manager:** John Smith (<EXAMPLE_MANAGER_EMAIL>) — Manager, Engineering
+**Manager:** John Smith (jsmith@redhat.com) — Manager, Engineering
 ```
 
 For multiple matches, present each person in the same format separated by a
@@ -69,5 +69,5 @@ horizontal rule, and ask the user if they meant a specific one.
 ## Example triggers
 
 1. "Who is Jane Doe?"
-2. "Look up <EXAMPLE_EMAIL> in Rover"
+2. "Look up jdoe@redhat.com in Rover"
 3. "What is John Smith's title and who does he report to?"

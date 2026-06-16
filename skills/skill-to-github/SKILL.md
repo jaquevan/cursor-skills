@@ -37,8 +37,8 @@ git --version    # must be installed
 ```
 
 Read the `github` skill for git identity rules. For GitHub repos:
-- Author: `jaquevan <jaquevan@bu.edu>`
-- Committer: `jaquevan <jaquevan@bu.edu>`
+- Author: `<YOUR_GITHUB_USERNAME> <<YOUR_GITHUB_EMAIL>>`
+- Committer: `<YOUR_GITHUB_USERNAME> <<YOUR_GITHUB_EMAIL>>`
 
 ## Workflow
 
@@ -62,10 +62,12 @@ For each skill, read every file in its directory.
 
 **Hard skip — never read or publish:**
 - `config.md`, `sources.md`, `*.secrets.md`
-- `eval/runs/` directories (run artifacts contain internal data)
+- `eval/runs/` directories (run artifacts contain internal data, user paths, transcripts)
+- `events.json`, `stdout.log`, `stderr.log` inside eval directories
 - Any file the user flags as private
 
-Keep `eval.yaml` and `eval/cases/` (test definitions are shareable).
+Keep `eval.yaml` and `eval/cases/` (test definitions are shareable, but sanitize
+absolute paths in `eval.yaml` — e.g. `/Users/<name>/` → `~/`).
 
 ### Step 3: Detect sensitive data
 
@@ -80,11 +82,14 @@ reference:
 
 | Pattern | Example | Placeholder |
 |---------|---------|-------------|
-| Workspace project ID | `<YOUR_WORKSPACE_PROJECT_ID>` | `<YOUR_WORKSPACE_PROJECT_ID>` |
-| MCP server with workspace prefix | `<YOUR_SLACK_MCP_SERVER>` | `<YOUR_SLACK_MCP_SERVER>` |
+| Workspace project ID | `Users-<name>-Desktop-<workspace>` | `<YOUR_WORKSPACE_PROJECT_ID>` |
+| MCP server with workspace prefix | `project-0-<workspace>-slack` | `<YOUR_SLACK_MCP_SERVER>` |
 | Agent transcript paths | `~/.cursor/projects/.../agent-transcripts/` | `~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID>/agent-transcripts/` |
-| Absolute home directory paths | `~/` | `~/` |
-| Branding assets | `redhat-hat.svg` | `hat-watermark.svg` (rename file too) |
+| Absolute home directory paths | `/Users/<name>/` | `~/` |
+| Branding assets | `hat-watermark.svg` | `hat-watermark.svg` (rename file too) |
+| Colleague names in scoring/detection tables | Names in importance logic or people tags | `<COLLEAGUE_NAME>` or generic description |
+| Google Slides/Doc IDs in eval summaries | 44-char alphanumeric in URLs | `<YOUR_SLIDES_ID>` |
+| Multi-workspace path lists | `for dir in ~/.cursor/projects/Users-...` | Single-dir example with placeholder |
 
 Also flag:
 - Inline config tables with hardcoded values (candidate for `config.example.md`)
@@ -121,7 +126,7 @@ Work in `/tmp/skill-publish/<skill-name>/`.
 
 2. **Apply replacements** — substitute every confirmed value.
 
-3. **Rename branding assets** — if files like `redhat-hat.svg` exist, rename
+3. **Rename branding assets** — if files like `hat-watermark.svg` exist, rename
    them and update all references.
 
 4. **Extract config** — if inline config tables exist:
@@ -129,6 +134,10 @@ Work in `/tmp/skill-publish/<skill-name>/`.
    - Add setup note to SKILL.md: `> **Setup:** Copy config.example.md to
      config.md and fill in your values.`
    - Remove inline hardcoded values
+
+5. **Verify sanitization** — run the pre-push checklist from
+   [sensitive-patterns.md](sensitive-patterns.md) against the staging directory.
+   If ANY pattern matches, fix the leak before proceeding. This is a hard gate.
 
 ### Step 6: Set up / verify target repo
 
@@ -181,9 +190,9 @@ If nothing to commit, tell the user and stop.
 Otherwise commit with correct identity:
 
 ```bash
-GIT_COMMITTER_NAME="jaquevan" GIT_COMMITTER_EMAIL="jaquevan@bu.edu" \
+GIT_COMMITTER_NAME="<YOUR_GITHUB_USERNAME>" GIT_COMMITTER_EMAIL="<YOUR_GITHUB_EMAIL>" \
   git -C <local-path> commit \
-  --author="jaquevan <jaquevan@bu.edu>" \
+  --author="<YOUR_GITHUB_USERNAME> <<YOUR_GITHUB_EMAIL>>" \
   -m "Add <skill-name> skill"
 ```
 
@@ -191,10 +200,10 @@ GIT_COMMITTER_NAME="jaquevan" GIT_COMMITTER_EMAIL="jaquevan@bu.edu" \
 
 ```bash
 FILTER_BRANCH_SQUELCH_WARNING=1 \
-GIT_COMMITTER_NAME="jaquevan" GIT_COMMITTER_EMAIL="jaquevan@bu.edu" \
+GIT_COMMITTER_NAME="<YOUR_GITHUB_USERNAME>" GIT_COMMITTER_EMAIL="<YOUR_GITHUB_EMAIL>" \
 git -C <local-path> filter-branch -f \
   --msg-filter 'sed "/^Co-authored-by:.*/d" | sed "/^$/N;/^\n$/d"' \
-  --env-filter 'export GIT_COMMITTER_NAME="jaquevan"; export GIT_COMMITTER_EMAIL="jaquevan@bu.edu"' \
+  --env-filter 'export GIT_COMMITTER_NAME="<YOUR_GITHUB_USERNAME>"; export GIT_COMMITTER_EMAIL="<YOUR_GITHUB_EMAIL>"' \
   HEAD~1..HEAD
 ```
 

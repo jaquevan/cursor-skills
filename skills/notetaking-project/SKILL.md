@@ -179,7 +179,7 @@ Follow the Red Hat brand color system strictly:
 Include the Red Hat fedora hat as a subtle watermark in the header:
 - One large SVG, top-right of the dark header, white at 6% opacity, ~280px wide
 - No red logo version — only the grey/white watermark
-- The SVG path is in `assets/redhat-hat.svg`
+- The SVG path is in `assets/hat-watermark.svg`
 - Header section needs `position:relative; overflow:hidden;`
 
 ### Layout structure
@@ -259,4 +259,4 @@ Full reprocessing only when the user says "reprocess" or "start over".
 ## Additional resources
 
 - Component HTML reference → [references/component-map.md](references/component-map.md)
-- Red Hat hat SVG → [assets/redhat-hat.svg](assets/redhat-hat.svg)
+- Red Hat hat SVG → [assets/hat-watermark.svg](assets/hat-watermark.svg)

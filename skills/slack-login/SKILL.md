@@ -17,7 +17,7 @@ description: Extracts Slack XOXC and XOXD tokens by opening a browser for the us
 
 Parse the user's prompt for a workspace URL or name:
 
-- If the prompt contains a full URL (e.g., `https://<YOUR_SLACK_WORKSPACE_URL>`), use that URL.
+- If the prompt contains a full URL (e.g., `https://redhat.enterprise.slack.com`), use that URL.
 - If the prompt contains a workspace name but not a full URL, construct it: `https://<name>.slack.com`
 - Otherwise default to `https://app.slack.com/client/`
 
@@ -90,5 +90,5 @@ Tell the user:
 - "Slack login"
 - "extract Slack tokens"
 - "set up Slack MCP"
-- "Slack login https://<YOUR_SLACK_WORKSPACE_URL>"
+- "Slack login https://redhat.enterprise.slack.com"
 - "refresh my Slack tokens"

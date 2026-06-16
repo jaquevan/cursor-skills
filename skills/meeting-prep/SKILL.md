@@ -58,7 +58,7 @@ Extract the person's name from the user's prompt.
 | User says | Person |
 |-----------|--------|
 | "prep for my Zack 1:1" | Zack |
-| "meeting prep for Andy Braren" | Andy Braren |
+| "meeting prep for <COLLEAGUE_NAME>" | <COLLEAGUE_NAME> |
 | "what should I talk about with Megan" | Megan |
 | "prep for my next 1:1" | Ask the user who the meeting is with |
 

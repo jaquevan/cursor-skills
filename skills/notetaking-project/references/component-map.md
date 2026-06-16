@@ -58,7 +58,7 @@ Include the Red Hat fedora in the top-right of the dark header section. Use two
 instances: a small visible one (top-right, red, 60px) and a large subtle watermark
 (bottom-right, white at 4% opacity, 300px).
 
-The SVG path is stored in `assets/redhat-hat.svg`. Inline it directly in the HTML:
+The SVG path is stored in `assets/hat-watermark.svg`. Inline it directly in the HTML:
 
 ```html
 <!-- Visible logo top-right -->

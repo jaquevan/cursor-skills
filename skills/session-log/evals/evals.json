@@ -1,0 +1,74 @@
+[
+  {
+    "id": "importance-scoring",
+    "prompt": "Given these 3 sessions from today's agent transcripts, score their importance and sort them:\n\nSession A: Had a 1:1 with Zack where he assigned a new task to integrate the prototype-creator with the eval harness. Created a Jira ticket <YOUR_JIRA_PROJECT>-456 and started implementation.\n\nSession B: Met with a fellow intern for an intro coffee chat. Discussed backgrounds, shared interests in frontend development. No action items.\n\nSession C: Researched PatternFly 6 token updates by reading documentation. No files changed, no deliverables.\n\nProduce the session log entry with importance scores and sorting.",
+    "assertions": [
+      "Session A must be scored 4 or 5 out of 5",
+      "Session B must be scored 1 out of 5",
+      "Session C must be scored 1 or 2 out of 5",
+      "Session A must appear first in the sorted output",
+      "Session B must appear last in the sorted output",
+      "Session A must have the [IMPORTANT] prefix in its heading",
+      "Session B must NOT have the [IMPORTANT] prefix",
+      "The output must include a #zack tag",
+      "The output must include a #sprint-work tag",
+      "The output must include a #networking tag for Session B",
+      "Session B must NOT include Changed or Why fields (low-importance omission rule)"
+    ]
+  },
+  {
+    "id": "carry-forward",
+    "prompt": "Yesterday's session log (session-log-2026-06-15.md) contains this session:\n\n### 2. Prototype-evaluate PR\n- **Importance:** 3/5\n- **What:** Opened PR #42 for the prototype-evaluate skill\n- **Changed:** skills/prototype-evaluate/SKILL.md\n- **Why:** Needed to ship the evaluation workflow\n- **Outcome:** in progress — PR open, awaiting Andy's review\n\nToday's transcripts contain NO mention of the prototype-evaluate PR. It has been absent for 1 day. Build today's session log entry showing how this item carries forward.",
+    "assertions": [
+      "The output must contain a '## Carried Forward' section",
+      "The carried item must show [DAY 2] marker",
+      "The carried item must reference the original date 2026-06-15",
+      "The carried item must show 'Last status: in progress' or similar",
+      "The output must include a #carried-forward tag",
+      "The carried item must NOT be tagged #stale (only 2 days, not 3+)"
+    ]
+  },
+  {
+    "id": "auto-escalate-stale",
+    "prompt": "Yesterday's session log contains this carried-forward item:\n\n### [DAY 2] API integration blocked on backend team\n- **Originally:** 2026-06-13\n- **Importance:** 3/5\n- **Last status:** blocked — waiting for backend endpoint deployment\n\nToday's transcripts still have no mention of this item. Build the carry-forward section for today's session log.",
+    "assertions": [
+      "The item must show [DAY 3] marker (incremented from DAY 2)",
+      "The importance must be 5/5 (auto-escalated at DAY 3+)",
+      "The output must include a #stale tag",
+      "The item must appear at the top of the Carried Forward section",
+      "The Signal line must mention the stale carry-forward by name or topic"
+    ]
+  },
+  {
+    "id": "people-detection",
+    "prompt": "Today's transcripts contain these 2 sessions:\n\nSession A: Discussed the evaluator-super-agent design with Colleague A in a Slack thread. He suggested using Playwright for persona walkthroughs. Colleague B also commented asking about timeline.\n\nSession B: Debugged a failing CI check on the prototype-creator repo. No people mentioned, just automated systems.\n\nProduce the tag section of today's session log.",
+    "assertions": [
+      "The tags must include #andy",
+      "The tags must include #steven",
+      "The tags must NOT include #zack (he was not mentioned)",
+      "The tags must include #team (3+ people referenced across sessions — Evan + Andy + Steven)",
+      "The tags must include #debugging for Session B"
+    ]
+  },
+  {
+    "id": "signal-line",
+    "prompt": "Today has 4 sessions: 2 scored as important (4/5 and 5/5), 1 medium (3/5), 1 low (1/5). There is 1 stale carry-forward item at DAY 4. Produce the opening lines of today's session log.",
+    "assertions": [
+      "The output must start with '# Session Log —' followed by today's date",
+      "The second line must be a '**Signal:**' line",
+      "The Signal line must mention '2 important items'",
+      "The Signal line must mention the stale carry-forward",
+      "A **Tags:** line must appear after the Signal line"
+    ]
+  },
+  {
+    "id": "auto-close",
+    "prompt": "Yesterday's session log has this carried-forward item:\n\n### [DAY 3] Slack bot experiment\n- **Originally:** 2026-06-12\n- **Importance:** 5/5 (auto-escalated)\n- **Last status:** in progress — exploring Slack SDK options\n\nNote: This item is NOT tagged #blocked. Today's transcripts have NO mention of Slack bot work. The item was also absent from yesterday's transcripts (2 consecutive days absent). What should happen to this item?",
+    "assertions": [
+      "The item must be marked as auto-closed or resolved",
+      "The resolution reason must mention '2 days' or 'no activity' or similar",
+      "The item must NOT appear in the Carried Forward section",
+      "The output must NOT carry this item forward to tomorrow"
+    ]
+  }
+]

@@ -8,5 +8,5 @@ key_facts:
   - "Claude Code caught 7/8 security vulnerabilities"
   - "Recommendation is Claude Code custom skill"
   - "Helm chart coverage gap needs Helm-specific patterns"
-  - "Steven Huels approved, budget reallocation starts July 1"
+  - "A. Manager approved, budget reallocation starts July 1"
   - "40 real PRs tested across Go, React, and Helm"

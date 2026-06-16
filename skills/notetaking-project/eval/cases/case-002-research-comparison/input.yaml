@@ -40,6 +40,6 @@ prompt: |
   45 sec) is acceptable since reviews aren't blocking. Only gap is Helm chart
   coverage — we should add Helm-specific patterns to the review skill.
 
-  Steven Huels approved the recommendation. Budget reallocation from CodeRabbit
+  A. Manager approved the recommendation. Budget reallocation from CodeRabbit
   trial to Claude Code API costs starts July 1.
 content_type: research

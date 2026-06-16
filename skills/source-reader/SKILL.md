@@ -29,7 +29,7 @@ Match the user's input against these patterns to determine the source type:
 | `#channel-name` or `in:channel-name` | Slack channel |
 | `@person` or `from:person` in Slack context | Slack DMs |
 | `PROJ-1234` (uppercase letters + dash + numbers) | Jira issue key |
-| Project key alone (e.g., `<YOUR_STRATEGY_PROJECT>`) | Jira project |
+| Project key alone (e.g., `RHAISTRAT`) | Jira project |
 
 If the input doesn't match any pattern, it's likely pasted text — pass it
 through to the downstream skill directly.
