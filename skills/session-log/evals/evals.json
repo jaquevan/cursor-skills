@@ -1,7 +1,7 @@
 [
   {
     "id": "importance-scoring",
-    "prompt": "Given these 3 sessions from today's agent transcripts, score their importance and sort them:\n\nSession A: Had a 1:1 with Zack where he assigned a new task to integrate the prototype-creator with the eval harness. Created a Jira ticket <YOUR_JIRA_PROJECT>-456 and started implementation.\n\nSession B: Met with a fellow intern for an intro coffee chat. Discussed backgrounds, shared interests in frontend development. No action items.\n\nSession C: Researched PatternFly 6 token updates by reading documentation. No files changed, no deliverables.\n\nProduce the session log entry with importance scores and sorting.",
+    "prompt": "Given these 3 sessions from today's agent transcripts, score their importance and sort them:\n\nSession A: Had a 1:1 with Zack where he assigned a new task to integrate the prototype-creator with the eval harness. Created a Jira ticket RHOAIUX-456 and started implementation.\n\nSession B: Met with a fellow intern for an intro coffee chat. Discussed backgrounds, shared interests in frontend development. No action items.\n\nSession C: Researched PatternFly 6 token updates by reading documentation. No files changed, no deliverables.\n\nProduce the session log entry with importance scores and sorting.",
     "assertions": [
       "Session A must be scored 4 or 5 out of 5",
       "Session B must be scored 1 out of 5",
@@ -41,7 +41,7 @@
   },
   {
     "id": "people-detection",
-    "prompt": "Today's transcripts contain these 2 sessions:\n\nSession A: Discussed the evaluator-super-agent design with Colleague A in a Slack thread. He suggested using Playwright for persona walkthroughs. Colleague B also commented asking about timeline.\n\nSession B: Debugged a failing CI check on the prototype-creator repo. No people mentioned, just automated systems.\n\nProduce the tag section of today's session log.",
+    "prompt": "Today's transcripts contain these 2 sessions:\n\nSession A: Discussed the evaluator-super-agent design with <COLLEAGUE_1> in a Slack thread. He suggested using Playwright for persona walkthroughs. <COLLEAGUE_3> also commented asking about timeline.\n\nSession B: Debugged a failing CI check on the prototype-creator repo. No people mentioned, just automated systems.\n\nProduce the tag section of today's session log.",
     "assertions": [
       "The tags must include #andy",
       "The tags must include #steven",

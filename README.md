@@ -4,17 +4,23 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 
 ## Skills
 
-### Productivity
+### Daily Workflow
 
 | Skill | What it does |
 |-------|-------------|
+| **[daily-briefing](skills/daily-briefing/)** | Unified morning briefing -- pulls calendar, tasks, email, Slack, Jira, cross-repo activity, and agent replies into a single Canvas |
 | **[work-context](skills/work-context/)** | Aggregates recent activity across Jira, GitHub, Calendar, Slack, Drive, and a local wiki into an interactive Canvas summary |
-| **[meeting-prep](skills/meeting-prep/)** | Cross-source 1:1 prep -- pulls Slack DMs, calendar history, Jira tickets, and Drive docs for a specific person into a Canvas with prioritized talking points |
+| **[meeting-prep](skills/meeting-prep/)** | Cross-source meeting prep with type classification -- pulls Slack DMs, calendar history, Jira tickets, Gemini notes, and Drive docs into a Canvas |
 | **[standup-writer](skills/standup-writer/)** | Auto-drafts a standup update (yesterday/today/blockers) from Jira status changes, PRs, calendar, and Slack |
-| **[session-log](skills/session-log/)** | Scans today's agent transcripts and writes a tagged daily entry into a Second Brain wiki |
+| **[session-log](skills/session-log/)** | Scans today's agent transcripts and writes a tagged daily entry into a Second Brain wiki with importance scoring and carry-forward tracking |
 | **[sprint-manager](skills/sprint-manager/)** | Manages Jira sprint transitions -- finds tickets, presents a dashboard, batch-updates sprint assignments, story points, and status |
-| **[tomorrow-calendar-accepted](skills/tomorrow-calendar-accepted/)** | Shows tomorrow's accepted calendar events in a clean schedule |
-| **[doc-sync](skills/doc-sync/)** | Detects documentation drift between code and docs in a project |
+| **[doc-sync](skills/doc-sync/)** | Detects documentation drift between Google Docs and a codebase |
+
+### Cross-Agent
+
+| Skill | What it does |
+|-------|-------------|
+| **[task-dispatch](skills/task-dispatch/)** | Sends tasks to other repos, checks agent replies, and scans repo activity (git commits, agent sessions) via `BRAIN_TASKS.md` files |
 
 ### Content Pipeline
 
@@ -22,9 +28,9 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 |-------|-------------|
 | **[notetaking-project](skills/notetaking-project/)** | Transforms raw notes into polished, self-contained HTML reports with PatternFly 6 styling |
 | **[notes-to-slides](skills/notes-to-slides/)** | Converts notes into branded Google Slides presentations |
-| **[note-to-email](skills/note-to-email/)** | Converts notes into formatted email drafts |
+| **[gdoc-writer](skills/gdoc-writer/)** | Creates, edits, formats, and collaborates on Google Docs -- includes push/pull/reply workflow for document commenting |
+| **[humanize-text](skills/humanize-text/)** | Rewrites AI-generated text to sound natural and human |
 | **[source-reader](skills/source-reader/)** | Extracts content from Google Docs, Slides, Slack, Jira, and Drive for downstream processing |
-| **[humanize-text](skills/humanize-text/)** | Rewrites AI-generated text to sound more natural and human |
 
 ### Knowledge Management
 
@@ -32,105 +38,51 @@ A collection of reusable [Agent Skills](https://agentskills.io) for Cursor and C
 |-------|-------------|
 | **[second-brain-ingest](skills/second-brain-ingest/)** | Ingests sources into a local wiki with cross-linking and indexing |
 | **[slack-summary](skills/slack-summary/)** | Summarizes Slack conversations into a Canvas with talking points |
-| **[inbox-processor](skills/inbox-processor/)** | Processes files from a desktop inbox folder |
-| **[tag-scanner](skills/tag-scanner/)** | Scans notes for tags and builds a cross-linked index |
 
 ### Writing and Review
 
 | Skill | What it does |
 |-------|-------------|
-| **[critique](skills/critique/)** | Provides structured feedback on writing, presentations, or documents |
-| **[superpowers](skills/superpowers/)** | Enhances agent capabilities with advanced reasoning and problem-solving patterns |
+| **[critique](skills/critique/)** | Stress-tests raw ideas and proposals with real research before you commit to them |
+| **[skill-review](skills/skill-review/)** | Reviews a SKILL.md against 10 structural conventions -- separation, examples, templates, anti-patterns, length |
 
-### Skill Development
-
-| Skill | What it does |
-|-------|-------------|
-| **[skill-creator](skills/skill-creator/)** | Scaffolds new Cursor Agent Skills following established project conventions |
-| **[skill-to-github](skills/skill-to-github/)** | Publishes skills to GitHub after scrubbing sensitive data, enforcing git identity, and stripping AI attribution |
-| **[skill-guide](skills/skill-guide/)** | Reference guide for skill authoring best practices |
-
-### Utilities
+### Finance
 
 | Skill | What it does |
 |-------|-------------|
-| **[rover-lookup](skills/rover-lookup/)** | Looks up colleagues in an internal directory |
-| **[slack-login](skills/slack-login/)** | Extracts Slack tokens via browser login and configures Slack MCP |
-| **[run-evals](skills/run-evals/)** | Runs skill evaluations using the agent-eval-harness |
+| **[budget-tracker](skills/budget-tracker/)** | Manages a personal budget via a Google Sheets tracker -- log spending, record income, view dashboard, process bank statements |
 
-## How Skills Compose
+### Infrastructure and Meta
 
-These skills are designed to compose with each other rather than work in isolation:
+| Skill | What it does |
+|-------|-------------|
+| **[skill-creator](skills/skill-creator/)** | Interactive guide for creating new skills following workspace conventions |
+| **[skill-guide](skills/skill-guide/)** | Routes user intent to the right skill -- reads available skills and suggests the best match |
+| **[skill-to-github](skills/skill-to-github/)** | Publishes skills to a shared GitHub repo after scrubbing sensitive data and enforcing git identity |
+| **[loop-architect](skills/loop-architect/)** | Designs and builds agent loops, goals, skills, and automations in Cursor |
+| **[run-evals](skills/run-evals/)** | Runs structured skill evaluations with and without the skill enabled |
+| **[slack-login](skills/slack-login/)** | Extracts Slack tokens and configures the Slack MCP server |
+| **[rover-lookup](skills/rover-lookup/)** | Looks up employee info using the Dataverse MCP |
 
-- **meeting-prep** delegates Slack thread grouping to **slack-summary** and doc extraction to **source-reader**
-- **standup-writer** reuses **work-context** data gathering patterns with a narrower time window
-- **session-log** delegates wiki integration to **second-brain-ingest**
-- **notetaking-project** uses **source-reader** as its extraction layer for external sources
-- **notes-to-slides** reads finished HTML notes from **notetaking-project**
-- **skill-to-github** enforces identity rules from the **github** skill and references **sensitive-patterns.md**
+### Jira Integrations
+
+| Skill | What it does |
+|-------|-------------|
+| **[sprint-manager](skills/sprint-manager/)** | Manages sprint transitions via the Atlassian MCP |
 
 ## Setup
 
-### Prerequisites
+See [SETUP.md](SETUP.md) for installation and MCP configuration instructions.
 
-- [Cursor](https://cursor.com) or [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
-- MCP servers configured for the services you use (see below)
-
-### Configuration
-
-These skills use placeholder values that you need to replace with your own. Search for these placeholders across all SKILL.md files and replace them:
-
-| Placeholder | What to put | Where it's used |
-|-------------|------------|-----------------|
-| `<YOUR_ATLASSIAN_CLOUD_ID>` | Your Atlassian cloud ID (UUID) | sprint-manager, work-context, meeting-prep, standup-writer |
-| `<YOUR_EMAIL>` | Your work email | sprint-manager, work-context |
-| `<YOUR_GITHUB_USERNAME>` | Your GitHub username | work-context, standup-writer |
-| `<YOUR_JIRA_PROJECT>` | Your Jira project key (e.g., MYPROJ) | sprint-manager, work-context, standup-writer |
-| `<YOUR_SLACK_MCP_SERVER>` | Your Slack MCP server name from Cursor settings | work-context, standup-writer, meeting-prep |
-| `<YOUR_ATLASSIAN_SITE>` | Your Atlassian site URL (e.g., myorg.atlassian.net) | sprint-manager |
-| `<YOUR_WORKSPACE_PROJECT_ID>` | Your Cursor workspace project ID (found in ~/.cursor/projects/) | session-log, work-context, standup-writer, meeting-prep |
-| `<YOUR_WORKSPACE_PATH>` | Absolute path to your workspace | Various |
-
-### MCP Servers
-
-Skills that interact with external services expect these MCP servers:
-
-| MCP Server | Used by | Purpose |
-|-----------|---------|---------|
-| Atlassian (`user-atlassian` or `plugin-atlassian-atlassian`) | sprint-manager, work-context, meeting-prep, standup-writer | Jira + Confluence |
-| Slack | work-context, meeting-prep, standup-writer, slack-summary | Slack search and history |
-| Google Workspace (`user-google-workspace`) | work-context, meeting-prep, standup-writer, tomorrow-calendar-accepted | Calendar, Drive, Gmail |
-
-### Installing Skills
-
-Copy individual skill directories into your workspace's `.cursor/skills/` folder:
-
-```bash
-cp -r skills/work-context /path/to/your/workspace/.cursor/skills/
-```
-
-Or symlink them:
-
-```bash
-ln -s /path/to/cursor-skills/skills/work-context /path/to/your/workspace/.cursor/skills/work-context
-```
-
-## Skill Format
-
-Every skill follows the [Agent Skills standard](https://agentskills.io):
+## Structure
 
 ```
-skills/<skill-name>/
-├── SKILL.md          # Required -- skill definition with YAML frontmatter
-├── reference.md      # Optional -- deep reference material
-├── scripts/          # Optional -- automation scripts
-├── references/       # Optional -- supporting docs
-├── templates/        # Optional -- output templates
-├── assets/           # Optional -- static files (SVGs, images)
-├── eval.yaml         # Optional -- eval harness config
-└── eval/             # Optional -- test cases
+skills/
+├── skill-name/
+│   ├── SKILL.md          # Main instructions (required)
+│   ├── references/        # Optional reference docs
+│   ├── scripts/           # Optional utility scripts
+│   └── eval/             # Optional eval cases
 ```
 
-## License
-
-MIT
+Sensitive values in skill files use placeholder format: `<YOUR_ATLASSIAN_CLOUD_ID>`, `<YOUR_SLACK_MCP_SERVER>`, etc. See each skill's SKILL.md for setup notes.

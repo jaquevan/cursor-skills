@@ -12,8 +12,8 @@ Had a 1:1 with Zack who assigned integration work between prototype-creator and 
 
 ### 1. [IMPORTANT] 1:1 with Zack — prototype-creator eval integration
 - **Importance:** 4/5 (involves manager + sprint ticket)
-- **What:** Discussed integration of prototype-creator with the eval harness in 1:1 with Zack. Created Jira ticket <YOUR_JIRA_PROJECT>-456 and began implementation.
-- **Changed:** Created <YOUR_JIRA_PROJECT>-456 in Jira
+- **What:** Discussed integration of prototype-creator with the eval harness in 1:1 with Zack. Created Jira ticket RHOAIUX-456 and began implementation.
+- **Changed:** Created RHOAIUX-456 in Jira
 - **Why:** Zack assigned the task to connect prototype-creator output into the eval harness workflow
 - **Outcome:** in progress — implementation started
 

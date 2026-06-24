@@ -1,0 +1,11 @@
+type: rewrite
+expected_buzzwords_removed:
+  - "would like to express"
+  - "extensive experience"
+  - delighted
+  - furthermore
+  - "valuable addition"
+expected_persona: humble_intern
+must_preserve:
+  - working group
+difficulty: easy

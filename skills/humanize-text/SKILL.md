@@ -51,16 +51,32 @@ This is how Evan writes. Every rewrite must match this profile.
 ### The basics
 
 - **Casual but competent.** Lowercase is default. "im", "ik", "bc", "tmrw", "sounds good". "right now" are all natural.
+  CRITICAL: Drop apostrophes from contractions. "I'm" → "im". "I've" →
+  "ive". "don't" → "dont". "haven't" → "havent". "I'd" → "id". This is
+  non-negotiable. If the output has proper apostrophes in casual
+  contractions, it's wrong.
 - **Genuinely enthusiastic.** Double exclamation points when excited ("Yes!!", "Accepted!! Thank you so much!!"). Exclamation points feel earned, not performative. Emoji reactions are natural using commong slack emojis ":" if this message is going into slack.
-- **Direct opener.** Starts with "Hey", "Just", "Also", or jumps straight to the point. Never "I hope this finds you well"  Never "I'd like to" when "I want to" works. when "Can show you" or "lmk if you want to see it" works. Watch for phrases that are casual-adjacent but still too smooth. If it sounds like a polished LinkedIn DM, it's wrong.
+- **Direct opener.** Starts with "Hey", "Just", "Also", or jumps straight
+  to the point. Never "I hope this finds you well"  Never "I'd like to"
+  when "I want to" works. when "Can show you" or "lmk if you want to see
+  it" works. Watch for phrases that are casual-adjacent but still too
+  smooth. If it sounds like a polished LinkedIn DM, it's wrong.
+- **Capitalize first letters of sentences.** Evan capitalizes "Hey", "Just",
+  "Also", "Im", etc. at the start of sentences. He does NOT go full
+  lowercase. "Hey! So ive been working on..." is correct. "hey! so ive
+  been working on..." is wrong. First word of each sentence gets a capital
+  letter. This applies to openers, mid-message sentence starts, everything.
 - **Curious and humble.** Asks questions without hedging. "Im curious to see
 what outputs look like." "not sure how the wg works but am I able to just
 express interest." "I was confused as usual." This is an intern who is
 learning at the company and is not afraid to say so.
 - **Technical when needed, conversational always.** Can write detailed
-technical breakdowns but keeps the tone like talking to a coworker. Uses
-bullet points for structure in longer messages but keeps bullets casual,
-not corporate.
+  technical breakdowns but keeps the tone like talking to a coworker. Uses
+  bullet points for structure in longer messages but keeps bullets casual,
+  not corporate. Replace precise corporate terms with Evan equivalents:
+  "7 usability dimensions" → "like 7 diff usability things". "acceptance
+  criteria" → "ACs" or "the Jira ACs". "evaluation framework" → "eval
+  framework" or just "the eval". Keep the meaning, lose the polish.
 - **Short messages stay short.** "Pool?", "im here", "oops", "thrilling.",
 "lunch!", "ok it works thank you". Does not pad short thoughts into
 paragraphs.
@@ -114,7 +130,7 @@ decoration. Use them when the context fits, but never force them.
   dramatic pauses or clause separators. Not once. Not ever. This is the
    single most important rule. If a sentence needs a dash, restructure it
    into two sentences, use a comma, or use parentheses.
-2. **NEVER use AI buzzwords.** Kill on sight:
+2. **NEVER use AI buzzwords or corporate idioms.** Kill on sight:
   - "delve", "leverage", "utilize", "facilitate"
   - "it's important to note", "it's worth noting"
   - "at the end of the day", "in today's landscape"
@@ -122,6 +138,8 @@ decoration. Use them when the context fits, but never force them.
   - "I'd be happy to", "absolutely", "certainly" (as filler agreement)
   - "comprehensive", "robust", "seamless"
   - "game-changer", "cutting-edge", "innovative"
+  - "low hanging fruit", "move the needle", "circle back", "touch base"
+  - "streamline", "optimize" (when used as filler, ok if actually technical)
 3. **NEVER over-correct casual grammar.** Keep "im", "dont", "bc", "ik".
   Do NOT add apostrophes back in or expand abbreviations. The casual style
    IS the voice.
@@ -288,11 +306,21 @@ Transform the text following the voice profile. Key moves:
 
 - Replace formal openers with direct ones
 - Drop unnecessary articles and hedge words
-- Use Evan's natural abbreviations where they fit
+- **Aggressively use Evan's abbreviations.** This is the #1 differentiator
+  between "generic casual" and "Evan casual." Every rewrite MUST include
+  at least 2-3 of these where they fit naturally: "rn", "bc", "im", "lmk",
+  "atm", "sg", "ik", "tmrw", "sm". Don't sprinkle them in — use them
+  wherever Evan would. "I am" → "im". "right now" → "rn". "because" → "bc".
+  "let me know" → "lmk". "at the moment" → "atm". If the rewrite has zero
+  abbreviations, it's wrong.
 - Downgrade polished casual to actual casual. "Would love to chat about
   this" becomes "can show you if you want" or "lmk if you want to see it".
   The test is: would Evan actually type this in Slack at 2pm on a Tuesday?
   If it feels like it was composed, it's too clean.
+- **Never enumerate with formal structure.** "Three things: X, Y, and Z"
+  reads like a presentation. Evan would say "mainly X and Y and artifact
+  caching" or just weave them into the sentence. Lists with colons and
+  commas are a dead giveaway of AI-polished text.
 - When responding to someone's technical point, think out loud. Reference
   specific things ("the deltas", "the screenshots", "Beaus tool") rather
   than explaining abstract patterns. Jump between thoughts naturally. Don't
@@ -301,10 +329,24 @@ Transform the text following the voice profile. Key moves:
 - Replace buzzwords with plain language
 - Shorten where possible without losing meaning
 - Add enthusiasm where it's genuine (not forced)
+- **Preserve key numbers and data points.** If the original says "40%
+  reduction" or "seven dimensions," keep those numbers. Evan would say
+  "could cut build times by like 40%" not just "speed things up." Data
+  makes the message credible.
 - If the message is short, keep it short. Don't explain what doesn't need
 explaining
 - Match the formality to the context: messages to a manager are slightly
 more structured than messages to fellow interns, but both are casual
+- **Sustain energy throughout.** Don't front-load enthusiasm in the opener
+  and then flatten out. If the opener is "hey!!" the rest of the message
+  should keep that energy — throw in exclamation points mid-message where
+  they feel natural, not just at the start.
+- **Kill polished casual phrasing.** These sound human but are still too
+  smooth for Evan: "a decent amount of experience" → "ive been doing a
+  ton of eval work". "I would love to share what I've learned" → "id love
+  to share what ive been working on". "bring a useful perspective" → "could
+  help out". The test: if a recruiter would write it in a LinkedIn DM,
+  Evan wouldn't type it in Slack.
 
 ### Step 3: Grammar and flow check
 

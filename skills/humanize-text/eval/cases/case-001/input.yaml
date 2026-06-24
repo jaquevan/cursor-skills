@@ -1,0 +1,8 @@
+prompt: |
+  Humanize this: I wanted to reach out regarding the prototype-creator evaluation
+  framework I've been developing. It's important to note that the tool leverages
+  Playwright-based persona walkthroughs to comprehensively assess prototypes against
+  their Jira acceptance criteria. I'd be happy to schedule a meeting to delve into
+  the technical details — the evaluation covers seven usability dimensions and
+  produces a robust HTML report. I believe this could be truly transformative for
+  our workflow. Please don't hesitate to reach out if you have any questions.

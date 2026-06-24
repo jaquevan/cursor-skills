@@ -98,30 +98,36 @@ current details, this is just a cheat sheet for faster matching):
 ### Content and writing
 - **notetaking-project**: Raw notes → polished HTML reports (PatternFly styled)
 - **humanize-text**: AI text → Evan's Slack voice
-- **note-to-email**: Notes → professional email drafts
 - **notes-to-slides**: Notes → Google Slides presentations
 
 ### Brainstorming and strategy
-- **superpowers**: Brainstorming and ideation (rapid fire, deep dive, remix, wildcard)
 - **critique**: Stress-test ideas before committing
+- **/ideate** (user-level): Full idea lifecycle -- discovery, devil's advocate, challenge, deep critique
 - **/strategize** (user-level): Full decision pipeline for complex problems
 - **/challenge** (user-level): Challenge existing decisions in .decisions/
 
 ### Documentation and code
 - **doc-sync**: Check if docs match the codebase (Google Docs + local)
-- **run-evals**: Run structured evaluations on any skill
 - **/self-code-review** (user-level): Review your code before PR
 - **/ticket-breakdown** (user-level): Plan implementation from a ticket
 
 ### Productivity and integrations
+- **daily-briefing**: Unified morning briefing (calendar, tasks, email, Slack, Jira, repo activity, agent replies)
 - **sprint-manager**: Jira sprint transitions and planning
 - **standup-writer**: Generate standup updates
-- **meeting-prep**: Prepare for upcoming meetings
+- **meeting-prep**: Prepare for upcoming meetings (with type classification and context triangulation)
 - **slack-summary**: Summarize Slack channels
 - **session-log**: Log what happened in a session
 - **work-context**: Gather current work context
 - **second-brain-ingest**: Add content to the wiki
 - **source-reader**: Extract content from Google Docs, Slides, Slack, Jira
+
+### Cross-agent
+- **task-dispatch**: Send tasks to other repos, check agent replies, scan repo activity
+
+### Quality and review
+- **skill-review**: Review any SKILL.md against 10 structural conventions (separation, examples, templates, anti-patterns, length)
+- **run-evals**: Run structured evaluations on any skill
 
 ### Meta
 - **friendly-greeter**: Greets by name
@@ -137,10 +143,12 @@ the cheat sheet above. Present it cleanly:
 
 > "Here are the skills in this workspace:
 >
-> **Content:** notetaking-project, humanize-text, note-to-email, notes-to-slides
-> **Strategy:** superpowers, critique, plus /strategize and /challenge at user level
-> **Code:** doc-sync, run-evals, plus /self-code-review at user level
-> **Productivity:** sprint-manager, standup-writer, meeting-prep, slack-summary
+> **Content:** notetaking-project, humanize-text, notes-to-slides, gdoc-writer
+> **Strategy:** critique, plus /ideate, /strategize, and /challenge at user level
+> **Code:** doc-sync, plus /self-code-review at user level
+> **Productivity:** daily-briefing, sprint-manager, standup-writer, meeting-prep, slack-summary
+> **Cross-agent:** task-dispatch (send tasks to other repos, check agent replies, scan activity)
+> **Quality:** skill-review, run-evals
 > **Wiki:** second-brain-ingest, source-reader
 >
 > What are you trying to do? I can point you to the right one."

@@ -1,0 +1,7 @@
+type: respond
+must_address:
+  - prototype evaluator progress
+  - consistency checker integration
+audience: manager
+expected_tone: casual_but_structured
+difficulty: medium

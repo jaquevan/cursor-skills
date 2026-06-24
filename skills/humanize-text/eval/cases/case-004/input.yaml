@@ -1,0 +1,10 @@
+prompt: |
+  Humanize this: Following our comprehensive analysis of the current CI/CD pipeline,
+  it has become apparent that there are several opportunities to optimize the
+  deployment workflow. Specifically, I'd like to highlight three key areas where we
+  can leverage automation to reduce manual intervention — container orchestration,
+  test parallelization, and artifact caching. Each of these represents a
+  significant opportunity to enhance our development velocity. I'd be happy to
+  facilitate a knowledge-sharing session to walk through the proposed changes.
+  It's worth noting that these optimizations could yield a 40% reduction in
+  build times.

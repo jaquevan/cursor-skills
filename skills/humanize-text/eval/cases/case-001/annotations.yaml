@@ -1,0 +1,17 @@
+type: rewrite
+expected_buzzwords_removed:
+  - delve
+  - leverage
+  - robust
+  - comprehensive
+  - transformative
+  - "don't hesitate"
+expected_phrases_removed:
+  - "I wanted to reach out"
+  - "It's important to note"
+must_preserve:
+  - eval framework
+  - Playwright
+  - Jira
+  - HTML report
+difficulty: easy

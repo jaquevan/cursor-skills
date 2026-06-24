@@ -1,0 +1,15 @@
+type: rewrite
+expected_buzzwords_removed:
+  - comprehensive
+  - leverage
+  - facilitate
+  - "it's worth noting"
+  - "significant opportunity"
+  - "enhance our development velocity"
+must_preserve:
+  - CI/CD pipeline
+  - container orchestration
+  - test parallelization
+  - artifact caching
+  - 40% reduction
+difficulty: medium

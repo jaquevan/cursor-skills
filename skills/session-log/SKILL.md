@@ -24,7 +24,8 @@ Second Brain wiki. Composes with `second-brain-ingest` for wiki integration.
 | Agent transcript reading | `work-context` / `standup-writer` patterns | Transcript location, JSONL format, directory listing |
 
 **What this skill adds:** daily aggregation of all agent sessions **across
-all workspaces** into a single structured wiki page with importance scoring,
+all workspaces** (my-cursor-claw, prototype-creator, automated-usability-testing,
+cursor-skills) into a single structured wiki page with importance scoring,
 people detection, carry-forward tracking, and auto-resolve.
 
 ## Workflow
@@ -39,12 +40,14 @@ date, use that instead. Store as `TARGET_DATE` in `YYYY-MM-DD` format.
 Transcript locations:
 
 **Cursor transcripts (all workspaces):**
-Scan all workspace transcript directories under `~/.cursor/projects/`:
-```
-~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID_1>/agent-transcripts/
-~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID_2>/agent-transcripts/
-```
-Add one line per workspace you want tracked.
+- `~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID>/agent-transcripts/`
+- `~/.cursor/projects/<YOUR_PROJECT_2_ID>/agent-transcripts/`
+- `~/.cursor/projects/<YOUR_PROJECT_3_ID>/agent-transcripts/`
+- `~/.cursor/projects/<YOUR_PROJECT_4_ID>/agent-transcripts/`
+
+Always scan all workspace transcript directories — work in prototype-creator,
+automated-usability-testing, and cursor-skills is core internship work and must
+be captured even when running session-log from my-cursor-claw.
 
 **Claude Code transcripts (if available):**
 `~/.claude/projects/` — check for any JSONL files modified on `TARGET_DATE`.
@@ -53,8 +56,10 @@ List directories modified on the target date across all workspaces:
 
 ```bash
 for dir in \
-  ~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID_1>/agent-transcripts \
-  ~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID_2>/agent-transcripts; do
+  ~/.cursor/projects/<YOUR_WORKSPACE_PROJECT_ID>/agent-transcripts \
+  ~/.cursor/projects/<YOUR_PROJECT_2_ID>/agent-transcripts \
+  ~/.cursor/projects/<YOUR_PROJECT_3_ID>/agent-transcripts \
+  ~/.cursor/projects/<YOUR_PROJECT_4_ID>/agent-transcripts; do
   find "$dir" -maxdepth 1 -type d -newermt "{TARGET_DATE} 00:00" \
     ! -newermt "{TARGET_DATE} 23:59" 2>/dev/null
 done | sort
@@ -109,7 +114,7 @@ signals additively (start at 1, cap at 5):
 
 | Signal | Boost | Detection |
 |--------|-------|-----------|
-| Involves manager (your manager) | +2 | Name appears in transcript content or Slack MCP calls reference him |
+| Involves manager (Zack / <YOUR_MANAGER>) | +2 | Name appears in transcript content or Slack MCP calls reference him |
 | Involves senior stakeholder (<COLLEAGUE_1>, <COLLEAGUE_2>, <COLLEAGUE_3>) | +1 | Name appears in transcript |
 | Produces a deliverable (PR merged, skill shipped, doc published) | +2 | `git push`, `gh pr create`, file created in a shared repo |
 | Carries forward from previous day | +1 per day carried | Matched against yesterday's carried-forward items |
@@ -130,10 +135,10 @@ Apply people tags when detected:
 
 | Person | Detection patterns | Tag |
 |--------|-------------------|-----|
-| Zack (manager) | "<Manager first name>", "<Manager last name>", DM channel with manager, 1:1 calendar event | `#<manager-tag>` |
-| <COLLEAGUE_1> | "<Colleague 1 first name>", "<Colleague 1 last name>", project discussions with colleague | `#<colleague-1-tag>` |
-| <COLLEAGUE_2> | "<Colleague 2 first name>", "<Colleague 2 last name>" | `#<colleague-2-tag>` |
-| <COLLEAGUE_3> | "<Colleague 3 first name>", "<Colleague 3 last name>" | `#<colleague-3-tag>` |
+| Zack (manager) | "Zack", "Zachary", "Bodnar", DM channel with Zack, 1:1 calendar event | `#zack` |
+| <COLLEAGUE_1> | "Andy", "Braren", prototype-creator discussions with Andy | `#andy` |
+| <COLLEAGUE_2> | "Beau", "Morley" | `#beau` |
+| <COLLEAGUE_3> | "Steven", "Huels" | `#steven` |
 | Group context | 3+ people referenced, standup, retro, team meeting | `#team` |
 
 People tags use the `pf-m-blue` color class (matching tag-scanner conventions).
@@ -208,10 +213,10 @@ Always include:
 - `#YYYY-MM-DD` (the date)
 
 **People tags** (auto-detected from Step 3.6, `pf-m-blue` color):
-- `#<manager-tag>` — any interaction, message, or reference to Zack/<YOUR_MANAGER_NAME>
-- `#<colleague-1-tag>` — <COLLEAGUE_1> references
-- `#<colleague-2-tag>` — <COLLEAGUE_2> references
-- `#<colleague-3-tag>` — <COLLEAGUE_3> references
+- `#zack` — any interaction, message, or reference to Zack/<YOUR_MANAGER>
+- `#andy` — <COLLEAGUE_1> references
+- `#beau` — <COLLEAGUE_2> references
+- `#steven` — <COLLEAGUE_3> references
 - `#team` — group meetings, standups, retros (3+ people)
 
 **Status tags** (derived from importance scoring and outcomes):
@@ -229,7 +234,7 @@ Always include:
 - `#canvas` — if any .canvas.tsx files were created
 - `#eval` — if eval-related work was done
 - `#mcp` — if MCP tools were called for external system interaction
-- `#<your-project-tag>` — if <your-project> related work appeared
+- `#prototype-creator` — if prototype-creator related work appeared
 - `#second-brain` — if wiki pages were created or modified
 - `#jira` — if Jira tickets were referenced or modified
 - `#github` — if PRs or commits were made
@@ -312,7 +317,7 @@ Delegate to `second-brain-ingest` Steps 2-7:
    ```
 
 6. **Relate to internship context** — apply `second-brain-ingest` Step 7
-   to connect the entry to key projects (<your-project>, <your-project>,
+   to connect the entry to key projects (prototype-creator, decision-kit,
    agent-eval-harness, etc.).
 
 ### Step 6: Confirm
@@ -340,7 +345,7 @@ replace manual check-ins entirely.
 
 **What "auto" means in practice:**
 - Intro meetings with peers (no action items, no follow-ups) automatically score 1/5 and sink to the bottom. No tagging needed.
-- A 1:1 with manager that produces a new task automatically scores 4/5 and gets `[IMPORTANT]` + `#<manager-tag>` + `#manager-sync`.
+- A 1:1 with Zack that produces a new task automatically scores 4/5 and gets `[IMPORTANT]` + `#zack` + `#manager-sync`.
 - A blocked PR that carries for 3 days auto-escalates to 5/5 + `#stale` without any user action.
 
 ## Fallback Behavior
@@ -362,7 +367,7 @@ replace manual check-ins entirely.
 | Reading entire transcripts | Use the bookend strategy: first 10 lines + ripgrep for tool calls + last 10 lines. Full reads are too slow for 10+ transcripts. |
 | Verbose session summaries | Keep each session to 5 lines: Importance, What, Changed, Why, Outcome. The log is a reference, not a narrative. |
 | Missing the "why" | The reasoning is in the assistant's text between tool calls. Don't just list file changes — capture the intent. |
-| Too many tags | People + status tags are always included. Context tags cap at 5–8. Prefer specific (#<your-project-tag>) over generic (#coding). |
+| Too many tags | People + status tags are always included. Context tags cap at 5–8. Prefer specific (#prototype-creator) over generic (#coding). |
 | Not cross-linking | Always run `second-brain-ingest` Step 7 to connect to internship context. Session logs are most valuable when linked to project pages. |
 | Skipping trivial-looking sessions | A session that only asked a question might have surfaced an important insight. Include it if the topic is project-relevant, even without file changes. Score it appropriately (low importance is fine — but still log it). |
 | Logging the same day twice | Check if `session-log-YYYY-MM-DD.md` already exists. If so, append new sessions to the existing page rather than overwriting. |

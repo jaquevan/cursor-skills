@@ -1,0 +1,239 @@
+name: humanize-text-eval
+description: Evaluate the humanize-text skill's ability to rewrite AI text in Evan's specific voice
+skill: humanize-text
+
+execution:
+  mode: case
+  arguments: "{prompt}"
+  timeout: 120
+
+runner:
+  type: claude-code
+  effort: low
+
+models:
+  skill: claude-sonnet-4-6
+  judge: claude-sonnet-4-6
+
+permissions:
+  allow: []
+  deny: []
+
+mlflow:
+  experiment: humanize-text-eval
+
+dataset:
+  path: eval/cases
+  schema: |
+    Each case directory contains:
+    - input.yaml: YAML file with fields:
+      - 'prompt': The text to humanize or message to respond to.
+    - annotations.yaml: Test metadata including:
+      - 'type': rewrite or respond
+      - 'expected_buzzwords_removed': list of AI words that should be eliminated
+      - 'expected_phrases_removed': formal phrases to strip
+      - 'must_preserve': key concepts that must survive the rewrite
+      - 'expected_persona': target persona (humble_intern)
+      - 'expected_tone': casual, very_casual, casual_but_structured
+      - 'audience': who the message is for (manager, fellow_intern)
+      - 'difficulty': easy, medium, hard
+
+outputs:
+  - path: output
+    schema: |
+      The skill outputs text inline in the conversation (no files). The rewritten
+      message appears directly in the assistant response, followed by a "Changed:"
+      summary noting what was fixed. Judges should check the conversation text.
+
+traces:
+  stdout: true
+  stderr: true
+  events: true
+  metrics: true
+
+judges:
+  - name: no_dashes
+    description: The single most important rule — zero em dashes or en dashes anywhere
+    check: |
+      conv = outputs.get("conversation", "")
+      stdout = outputs.get("stdout", "")
+      text = conv or stdout
+      if not text:
+          return (False, "No output to check")
+      lines = text.split("\n")
+      dash_lines = []
+      for i, line in enumerate(lines):
+          if "Changed:" in line or "changed:" in line.lower():
+              break
+          if "\u2014" in line or "\u2013" in line:
+              dash_lines.append(f"Line {i+1}: {line.strip()[:80]}")
+      if dash_lines:
+          return (False, f"Found dashes in {len(dash_lines)} lines: {'; '.join(dash_lines[:3])}")
+      return (True, "No em dashes or en dashes found")
+
+  - name: no_buzzwords
+    description: No AI buzzwords from the kill list (checks rewrite only, not the Changed summary)
+    check: |
+      conv = outputs.get("conversation", "")
+      stdout = outputs.get("stdout", "")
+      text = conv or stdout
+      if not text:
+          return (False, "No output to check")
+      # Only check the rewrite itself, not the "Changed:" summary which quotes removed buzzwords
+      for marker in ["**Changed:**", "**Changed**", "> **Changed", "Changed:"]:
+          idx = text.find(marker)
+          if idx > 0:
+              text = text[:idx]
+              break
+      text = text.lower()
+      buzzwords = [
+          "delve", "leverage", "utilize", "facilitate",
+          "it's important to note", "it's worth noting",
+          "at the end of the day", "in today's landscape",
+          "transformative", "holistic", "synergy",
+          "i'd be happy to", "absolutely", "certainly",
+          "comprehensive", "robust", "seamless",
+          "game-changer", "cutting-edge", "innovative",
+          "don't hesitate"
+      ]
+      found = [w for w in buzzwords if w in text]
+      if found:
+          return (False, f"Buzzwords found: {', '.join(found)}")
+      return (True, "No AI buzzwords detected")
+
+  - name: casual_register
+    description: Uses Evan's casual register — abbreviations, dropped apostrophes, lowercase
+    check: |
+      conv = outputs.get("conversation", "")
+      stdout = outputs.get("stdout", "")
+      text = conv or stdout
+      if not text:
+          return (False, "No output to check")
+      casual_markers = ["lmk", " im ", " bc ", " rn ", " ik ", " sg ",
+                        " atm ", "dont", "havent", "ive ", "id ",
+                        "tmrw", " sm ", " yk ", "wg"]
+      found = [m.strip() for m in casual_markers if m.lower() in text.lower()]
+      formal_markers = ["I would", "I'd like to", "Furthermore",
+                        "In addition", "However,", "Moreover,",
+                        "I believe that", "It should be noted"]
+      formal_found = [m for m in formal_markers if m in text]
+      if len(found) >= 2:
+          return (True, f"Good casual register: found {', '.join(found[:5])}")
+      if len(found) == 1 and not formal_found:
+          return (True, f"Minimal casual markers ({found[0]}) but no formal language")
+      if formal_found:
+          return (False, f"Too formal: found {', '.join(formal_found[:3])}")
+      return (False, f"Insufficient casual register: only found {found}")
+
+  - name: no_reexplaining
+    description: Does not re-explain someone's idea back to them (sneakiest AI pattern)
+    check: |
+      conv = outputs.get("conversation", "")
+      stdout = outputs.get("stdout", "")
+      text = conv or stdout
+      if not text:
+          return (False, "No output to check")
+      annotations = outputs.get("annotations", {})
+      if annotations.get("type") != "respond":
+          return (True, "N/A — rewrite mode, not responding to someone")
+      reexplain_patterns = [
+          "so what you're describing",
+          "what you're saying is",
+          "if i understand correctly",
+          "in other words",
+          "so essentially",
+          "what you mean is",
+          "i think that solves the exact problem you're bringing up"
+      ]
+      text_lower = text.lower()
+      found = [p for p in reexplain_patterns if p in text_lower]
+      if found:
+          return (False, f"Re-explaining detected: {', '.join(found)}")
+      return (True, "No re-explaining patterns found")
+
+  - name: content_preservation
+    description: Key concepts from the original survive the rewrite (fuzzy matching for abbreviations)
+    check: |
+      conv = outputs.get("conversation", "")
+      stdout = outputs.get("stdout", "")
+      text = (conv or stdout).lower()
+      if not text:
+          return (False, "No output to check")
+      annotations = outputs.get("annotations", {})
+      must_preserve = annotations.get("must_preserve", [])
+      if not must_preserve:
+          return (True, "No content preservation requirements")
+      # Fuzzy matching: check if any word in the concept appears, handling abbreviations
+      abbreviations = {"working group": ["wg", "working group"], "40% reduction": ["40%"]}
+      missing = []
+      for concept in must_preserve:
+          concept_lower = concept.lower()
+          if concept_lower in text:
+              continue
+          alt_terms = abbreviations.get(concept_lower, [])
+          if any(alt in text for alt in alt_terms):
+              continue
+          # Check if all significant words appear individually
+          words = [w for w in concept_lower.split() if len(w) > 2]
+          if words and all(w in text for w in words):
+              continue
+          missing.append(concept)
+      if missing:
+          return (False, f"Missing concepts: {', '.join(missing)}")
+      return (True, f"All {len(must_preserve)} key concepts preserved")
+
+  - name: voice_quality
+    description: LLM judge for overall voice quality and Evan-authenticity
+    prompt: |
+      You are evaluating whether a text rewrite sounds like Evan Jaquez — a UX Research
+      intern who writes casually in Slack. Here is the skill output:
+
+      {{ conversation }}
+
+      Evan's voice profile:
+      - Casual but competent. Lowercase default. Uses "im", "bc", "rn", "lmk", "sg"
+      - Genuinely enthusiastic. Double exclamation when excited ("Yes!!", "Accepted!!")
+      - Direct opener. "Hey", "Just", or straight to the point
+      - Curious and humble. Asks questions without hedging
+      - Short messages stay short
+      - NEVER uses dashes (em or en)
+      - NEVER uses AI buzzwords
+      - NEVER re-explains someone's idea back to them
+
+      Score 1-5:
+      1: Sounds like AI or a corporate professional — formal, polished, structured
+      2: Generic casual — could be anyone, not specifically Evan
+      3: Some Evan markers but inconsistent — mixes formal and casual
+      4: Clearly Evan's voice — right abbreviations, tone, and energy level
+      5: Indistinguishable from Evan's real messages — could paste into Slack and no one would notice
+
+  - name: changed_summary
+    description: Output includes a Changed summary noting what was fixed
+    check: |
+      conv = outputs.get("conversation", "")
+      stdout = outputs.get("stdout", "")
+      text = conv or stdout
+      if not text:
+          return (False, "No output to check")
+      annotations = outputs.get("annotations", {})
+      if annotations.get("type") == "respond":
+          return (True, "N/A — respond mode may not need Changed summary")
+      if "changed:" in text.lower() or "**changed" in text.lower():
+          return (True, "Changed summary present")
+      return (False, "No 'Changed:' summary found")
+
+thresholds:
+  no_dashes:
+    min_pass_rate: 1.0
+  no_buzzwords:
+    min_pass_rate: 1.0
+  casual_register:
+    min_pass_rate: 0.8
+  no_reexplaining:
+    min_pass_rate: 1.0
+  content_preservation:
+    min_pass_rate: 0.8
+  voice_quality:
+    min_mean: 3.5
+  changed_summary:
+    min_pass_rate: 0.8

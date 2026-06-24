@@ -6,13 +6,13 @@
 
 ## Summary
 
-Discussed the evaluator-super-agent design with Colleague A and Colleague B via Slack, exploring Playwright for persona walkthroughs. Also debugged a failing CI check on the prototype-creator repo.
+Discussed the evaluator-super-agent design with <COLLEAGUE_1> and <COLLEAGUE_3> via Slack, exploring Playwright for persona walkthroughs. Also debugged a failing CI check on the prototype-creator repo.
 
 ## Sessions (sorted by importance)
 
-### 1. Evaluator-super-agent design discussion with Colleague A and Steven
+### 1. Evaluator-super-agent design discussion with Andy and Steven
 - **Importance:** 2/5 (senior stakeholder involved)
-- **What:** Discussed the evaluator-super-agent design with Colleague A in a Slack thread. Colleague A suggested using Playwright for persona walkthroughs. Colleague B also commented asking about timeline.
+- **What:** Discussed the evaluator-super-agent design with <COLLEAGUE_1> in a Slack thread. Andy suggested using Playwright for persona walkthroughs. <COLLEAGUE_3> also commented asking about timeline.
 - **Changed:** (no files changed)
 - **Why:** Exploring architecture for persona-driven evaluation using Playwright
 - **Outcome:** in progress — awaiting timeline alignment with Steven

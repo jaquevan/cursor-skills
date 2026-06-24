@@ -7,7 +7,7 @@
 ## Sessions
 
 ### 1. Evaluator-super-agent design discussion
-- **People:** Colleague A, Colleague B
+- **People:** <COLLEAGUE_1>, <COLLEAGUE_3>
 - **What:** Discussed the evaluator-super-agent design with Andy in a Slack thread. He suggested using Playwright for persona walkthroughs. Steven commented asking about timeline.
 
 ### 2. CI debugging on prototype-creator

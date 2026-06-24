@@ -1,0 +1,7 @@
+type: respond
+must_address:
+  - cursor skills experience
+  - intern social
+audience: fellow_intern
+expected_tone: very_casual
+difficulty: easy

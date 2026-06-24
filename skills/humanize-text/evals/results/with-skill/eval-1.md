@@ -1,0 +1,3 @@
+Hey! Been working on an evaluation framework for prototype-creator. It uses Playwright to walk through prototypes as different personas and checks them against the Jira acceptance criteria. Covers seven usability dimensions and generates an HTML report at the end. Can show you how it works if you want, lmk and we can find a time
+
+> **Changed:** killed em dash, removed "leverage/delve/robust/transformative/comprehensively", cut "it's important to note" and "please don't hesitate to reach out", replaced "I'd be happy to schedule a meeting" with "lmk and we can find a time", shortened the whole thing

@@ -10,8 +10,8 @@
 
 ### 1. [IMPORTANT] New task: integrate prototype-creator with eval harness
 - **Importance:** 5/5
-- **What:** Had a 1:1 with Zack who assigned a new task to integrate the prototype-creator with the eval harness. Created Jira ticket <YOUR_JIRA_PROJECT>-456 and started implementation.
-- **Changed:** Created <YOUR_JIRA_PROJECT>-456 in Jira; began implementation work
+- **What:** Had a 1:1 with Zack who assigned a new task to integrate the prototype-creator with the eval harness. Created Jira ticket RHOAIUX-456 and started implementation.
+- **Changed:** Created RHOAIUX-456 in Jira; began implementation work
 - **Why:** Direct assignment from Zack — new sprint work item
 - **Outcome:** in progress — ticket created, implementation started
 

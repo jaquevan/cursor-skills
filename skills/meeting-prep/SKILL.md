@@ -1,20 +1,25 @@
 ---
 name: meeting-prep
 description: >-
-  Cross-source 1:1 meeting prep that pulls Slack DMs, calendar history, Jira
-  activity, Drive docs, and Second Brain context for a specific person into a
-  Canvas with prioritized talking points. Use when the user says "prep for my
-  Zack 1:1", "meeting prep for Andy", "prep for my 1:1 with <name>", "prepare
-  for my meeting with <name>", "what should I talk about with <name>", or asks
-  to prepare for a meeting with a specific person.
+  Cross-source meeting prep that pulls Slack DMs, calendar history, Jira
+  activity, Drive docs, Gemini meeting notes, and Second Brain context for a
+  specific person or meeting into a Canvas with prioritized talking points.
+  Classifies meetings by type (1:1, decision, presentation, standup, large)
+  to tailor prep depth. Use when the user says "prep for my Zack 1:1",
+  "meeting prep for Andy", "prep for my 1:1 with <name>", "prepare for my
+  meeting with <name>", "what should I talk about with <name>", "what
+  meeting am I in", "prep me for my next meeting", or asks to prepare for
+  a meeting with a specific person.
 disable-model-invocation: true
 ---
 
 # Meeting Prep
 
 Orchestrates existing skills (`slack-summary`, `source-reader`, `work-context`
-patterns) to build a cross-source prep brief for a 1:1 meeting. Output is an
-interactive Canvas with prioritized talking points.
+patterns) to build a cross-source prep brief for a meeting. Classifies
+meeting type to determine prep depth, and triangulates context across Slack,
+Gemini notes, and running docs. Output is an interactive Canvas with
+prioritized talking points.
 
 ## Skill Composition
 
@@ -27,6 +32,64 @@ delegates to an existing skill's logic:
 | Meeting note docs | `source-reader` | Google Doc extraction from URLs found in calendar events |
 | MCP patterns | `work-context` | Server names, cloud ID, read-only constraint, graceful degradation |
 | Agent transcripts | Local filesystem | Search past Cursor agent conversations for undocumented work context related to the person |
+
+## Meeting Classification
+
+Before gathering data, classify the meeting to determine prep depth:
+
+| Type | Signals | Prep Depth |
+|------|---------|------------|
+| **1:1** | 2 attendees, "1:1", "Name / Name" | Deep -- DMs, shared topics, open loops, Gemini notes |
+| **Decision** | "review", "approve", "prioritize", "strategy" | Deep -- options, stakeholder positions |
+| **Presentation** | "readout", "demo", "showcase", "walkthrough" | Medium -- content preview |
+| **Standup** | "standup", "sync", "check-in", recurring daily | Quick -- blockers only |
+| **Large** | 10+ attendees, "all hands", "town hall" | Quick -- agenda only |
+| **Standard** | Everything else | Medium -- recent discussion context |
+
+For **Quick** meetings: skip Steps 4a (Slack DMs), 4d (Second Brain), and
+4e (Agent transcripts). Only pull calendar context and Jira blockers.
+
+For **Deep** meetings: run all steps plus Context Triangulation (below).
+
+## Context Triangulation
+
+For Deep-prep meetings, don't look at each source in isolation. Connect
+conversations across Slack, Gemini meeting notes, and running docs using
+timestamps and participants.
+
+### Running Meeting Notes Docs (1:1 docs, team syncs)
+
+1. Fetch the doc and scan for entries from the **last 4 weeks**
+2. Extract topics and action items from the most recent entries
+3. For each topic found, search Slack for related messages from **the same
+   time period** (use `after:` and `before:` date modifiers)
+4. Present topics as continuous threads: "On Jun 18 you discussed X in the
+   1:1 notes, and on Jun 20 there was a Slack thread about the same topic"
+
+### Gemini Meeting Notes (auto-generated from Google Meet)
+
+These arrive as emails from `gemini-notes@google.com` or
+`meetings-noreply@google.com`.
+
+1. Search Gmail:
+   ```
+   gmail_list_messages(
+     query = "subject:\"<meeting title>\" (from:gemini-notes OR from:meetings-noreply)",
+     max_results = 5
+   )
+   ```
+2. Fetch the last 3-4 instances within the past month
+3. Extract: what was discussed, decisions made, action items with owners
+4. Cross-reference action items with Slack DMs and channel messages from
+   the same time period
+
+### Recency Rules
+
+- Regular contacts (weekly meetings, team members): last month of context
+- Infrequent contacts: last interaction matters regardless of age
+- Weight recent items higher: last week > two weeks ago > a month ago
+- If a topic appears across multiple sources in the same week, flag it as
+  an active thread
 
 ## Read-Only Constraint
 
@@ -51,19 +114,24 @@ Same as `work-context`. Additionally:
 
 ## Workflow
 
-### Step 1: Identify the person
+### Step 1: Identify the meeting and person
 
-Extract the person's name from the user's prompt.
+Determine what the user is asking about:
 
-| User says | Person |
+| User says | Action |
 |-----------|--------|
-| "prep for my Zack 1:1" | Zack |
-| "meeting prep for <COLLEAGUE_NAME>" | <COLLEAGUE_NAME> |
-| "what should I talk about with Megan" | Megan |
+| "prep for my Zack 1:1" | Person = Zack |
+| "meeting prep for Andy" | Person = Andy |
+| "what should I talk about with Megan" | Person = Megan |
+| "what meeting am I in" | Run `date`, match current time against today's calendar |
+| "prep me for my next meeting" | Find the next upcoming event on today's calendar |
 | "prep for my next 1:1" | Ask the user who the meeting is with |
 
-Read `Me.md` in the workspace root for the user's own name, email, and
-timezone.
+Read the `personal-context` rule (or `Me.md` in the workspace root) for
+the user's name, email, timezone, Jira cloud ID, and MCP server names.
+
+After identifying the meeting, classify it using the Meeting Classification
+table above. This determines which data sources to query.
 
 ### Step 2: Resolve person across systems
 
@@ -85,7 +153,7 @@ calendar_get_events(
 
 From the results:
 - Match attendee names to find their **email address** (e.g.,
-  `<MANAGER_EMAIL>`)
+  `<COLLEAGUE_EMAIL>`)
 - Find the **last completed meeting** with this person = `LAST_MEETING`
 - Find the **next upcoming meeting** with this person = `NEXT_MEETING`
 - The lookback window is: `LAST_MEETING` to now
